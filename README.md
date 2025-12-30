@@ -2,7 +2,7 @@
 
 🚀 Check your Antigravity AI quota from terminal
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Version](https://img.shields.io/badge/version-0.2.0-blue)
 ![Go](https://img.shields.io/badge/Go-1.21+-00ADD8?logo=go)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
 
@@ -77,5 +77,6 @@ MIT © 2024
 <p align="center">
   <b>If you find this useful, give it a ⭐!</b>
 </p>
+
 
 
