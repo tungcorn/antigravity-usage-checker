@@ -8,26 +8,19 @@
 
 ## 🇬🇧 English
 
-### Installation
+### Quick Install (Recommended)
+
+Run this in **PowerShell**:
+
+```powershell
+iwr https://raw.githubusercontent.com/TungCorn/antigravity-usage-checker/main/install.ps1 -useb | iex
+```
+
+### Manual Install
 
 1. **Download** [`antigravity-usage-checker-windows.zip`](https://github.com/TungCorn/antigravity-usage-checker/releases/latest)
-
-2. **Extract** the zip file
-   
-3. **Open terminal** in the extracted folder and run:
-```powershell
-powershell -ExecutionPolicy Bypass -File install.ps1
-```
-
-4. **Restart terminal** and run:
-```bash
-agusage
-```
-
-> 💡 **Tip**: If `agusage` is not found, run this to refresh PATH:
-> ```powershell
-> $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
-> ```
+2. Extract and run `install.ps1`
+3. Restart terminal and run `agusage`
 
 > ⚠️ Antigravity must be running
 
@@ -47,26 +40,19 @@ agusage --help   # Help
 
 ## 🇻🇳 Tiếng Việt
 
-### Cài đặt
+### Cài đặt nhanh (Khuyên dùng)
+
+Chạy lệnh sau trong **PowerShell**:
+
+```powershell
+iwr https://raw.githubusercontent.com/TungCorn/antigravity-usage-checker/main/install.ps1 -useb | iex
+```
+
+### Cài thủ công
 
 1. **Tải** [`antigravity-usage-checker-windows.zip`](https://github.com/TungCorn/antigravity-usage-checker/releases/latest)
-
-2. **Giải nén** file zip
-
-3. **Mở terminal** tại thư mục vừa giải nén và chạy:
-```powershell
-powershell -ExecutionPolicy Bypass -File install.ps1
-```
-
-4. **Khởi động lại terminal** và chạy:
-```bash
-agusage
-```
-
-> 💡 **Mẹo**: Nếu lệnh `agusage` không tìm thấy, chạy lệnh này để refresh PATH:
-> ```powershell
-> $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
-> ```
+2. Giải nén và chạy `install.ps1`
+3. Khởi động lại terminal và chạy `agusage`
 
 > ⚠️ Antigravity phải đang chạy
 
