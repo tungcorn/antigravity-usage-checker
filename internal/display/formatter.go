@@ -49,35 +49,37 @@ func showTable(data *api.UsageData, isCached bool) {
 	// Header
 	fmt.Println()
 	fmt.Printf("%s%s🚀 Antigravity Usage Monitor%s\n", Bold, Cyan, Reset)
-	fmt.Println(strings.Repeat("─", 55))
+	fmt.Println(strings.Repeat("─", 70))
 	
 	// Cache indicator
 	if isCached || data.IsCached {
 		fmt.Printf("%s⚠️  Cached data from %s%s\n", Yellow, formatTime(data.FetchedAt), Reset)
-		fmt.Println(strings.Repeat("─", 55))
+		fmt.Println(strings.Repeat("─", 70))
 	}
 	
 	// Table header
-	fmt.Printf("%s%-20s %8s %8s %8s %s%s\n", Bold,
-		"Model", "Used", "Limit", "Left", "Progress", Reset)
-	fmt.Println(strings.Repeat("─", 55))
+	fmt.Printf("%s%-20s %6s %6s %6s %-15s %s%s\n", Bold,
+		"Model", "Used", "Limit", "Left", "Progress", "Reset", Reset)
+	fmt.Println(strings.Repeat("─", 70))
 	
 	// Model rows
 	for _, model := range data.Models {
 		color := getStatusColor(model.UsagePercent)
-		progressBar := createProgressBar(model.UsagePercent, 15)
+		progressBar := createProgressBar(model.UsagePercent, 10)
+		resetStr := formatResetTime(model.ResetTime)
 		
-		fmt.Printf("%-20s %s%8d%s %8d %s%8d%s %s\n",
+		fmt.Printf("%-20s %s%6d%s %6d %s%6d%s %-18s %s\n",
 			truncateString(model.ModelName, 20),
 			Magenta, model.Used, Reset,
 			model.Limit,
 			color, model.Remaining, Reset,
 			progressBar,
+			resetStr,
 		)
 	}
 	
 	// Footer
-	fmt.Println(strings.Repeat("─", 55))
+	fmt.Println(strings.Repeat("─", 70))
 	
 	// Tier and credits
 	footer := []string{}
@@ -143,4 +145,34 @@ func truncateString(s string, maxLen int) string {
 // formatTime formats a time.Time for display.
 func formatTime(t time.Time) string {
 	return t.Format("15:04:05 02/01/2006")
+}
+
+// formatResetTime converts an ISO timestamp to relative time (e.g., "in 2h 30m").
+func formatResetTime(resetTimeStr string) string {
+	if resetTimeStr == "" {
+		return "-"
+	}
+	
+	// Parse ISO 8601 timestamp
+	resetTime, err := time.Parse(time.RFC3339, resetTimeStr)
+	if err != nil {
+		return "-"
+	}
+	
+	now := time.Now()
+	diff := resetTime.Sub(now)
+	
+	// If already reset
+	if diff <= 0 {
+		return Dim + "reset" + Reset
+	}
+	
+	// Format as relative time
+	hours := int(diff.Hours())
+	minutes := int(diff.Minutes()) % 60
+	
+	if hours > 0 {
+		return fmt.Sprintf("%s%dh %dm%s", Dim, hours, minutes, Reset)
+	}
+	return fmt.Sprintf("%s%dm%s", Dim, minutes, Reset)
 }
