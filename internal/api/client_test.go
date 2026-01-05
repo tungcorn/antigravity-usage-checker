@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"testing"
 )
 
@@ -74,7 +75,7 @@ func TestParseUserStatusResponse(t *testing.T) {
 						"clientModelConfigs": []interface{}{
 							map[string]interface{}{
 								"label": "Basic Model",
-								// No quotaInfo
+								// No quotaInfo, struct will have zero values (RemainingFraction=0 -> 100% used)
 							},
 						},
 					},
@@ -88,7 +89,13 @@ func TestParseUserStatusResponse(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			usage, err := client.parseUserStatusResponse(tt.response)
+			// Marshal map to JSON bytes to simulate API response
+			respBytes, err := json.Marshal(tt.response)
+			if err != nil {
+				t.Fatalf("Failed to marshal test response: %v", err)
+			}
+
+			usage, err := client.parseUserStatusResponse(respBytes)
 
 			if tt.wantErr {
 				if err == nil {
@@ -134,7 +141,12 @@ func TestParseUserStatusResponseModelDetails(t *testing.T) {
 		},
 	}
 
-	usage, err := client.parseUserStatusResponse(response)
+	respBytes, err := json.Marshal(response)
+	if err != nil {
+		t.Fatalf("Failed to marshal test response: %v", err)
+	}
+
+	usage, err := client.parseUserStatusResponse(respBytes)
 	if err != nil {
 		t.Fatalf("parseUserStatusResponse() error: %v", err)
 	}
@@ -165,54 +177,5 @@ func TestParseUserStatusResponseModelDetails(t *testing.T) {
 
 	if model.ResetTime != "2024-12-31T23:59:59Z" {
 		t.Errorf("ResetTime = %q, want %q", model.ResetTime, "2024-12-31T23:59:59Z")
-	}
-}
-
-// TestGetStringValue tests safe string extraction.
-func TestGetStringValue(t *testing.T) {
-	tests := []struct {
-		name       string
-		m          map[string]interface{}
-		key        string
-		defaultVal string
-		want       string
-	}{
-		{
-			name:       "Key exists with string value",
-			m:          map[string]interface{}{"name": "Claude"},
-			key:        "name",
-			defaultVal: "Unknown",
-			want:       "Claude",
-		},
-		{
-			name:       "Key does not exist",
-			m:          map[string]interface{}{"other": "value"},
-			key:        "name",
-			defaultVal: "Unknown",
-			want:       "Unknown",
-		},
-		{
-			name:       "Key exists but not string",
-			m:          map[string]interface{}{"count": 42},
-			key:        "count",
-			defaultVal: "N/A",
-			want:       "N/A",
-		},
-		{
-			name:       "Empty map",
-			m:          map[string]interface{}{},
-			key:        "name",
-			defaultVal: "Default",
-			want:       "Default",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := getStringValue(tt.m, tt.key, tt.defaultVal)
-			if got != tt.want {
-				t.Errorf("getStringValue() = %q, want %q", got, tt.want)
-			}
-		})
 	}
 }
