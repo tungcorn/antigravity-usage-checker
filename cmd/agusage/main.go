@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -17,29 +18,25 @@ const (
 )
 
 func main() {
-	// Parse command line flags
-	showVersion := false
-	outputJSON := false
+	// Define flags
+	showVersion := flag.Bool("version", false, "Show version information")
+	flag.BoolVar(showVersion, "v", false, "Show version information (shorthand)")
 	
-	for _, arg := range os.Args[1:] {
-		switch arg {
-		case "-v", "--version":
-			showVersion = true
-		case "-j", "--json":
-			outputJSON = true
-		case "-h", "--help":
-			printHelp()
-			return
-		}
-	}
+	outputJSON := flag.Bool("json", false, "Output in JSON format")
+	flag.BoolVar(outputJSON, "j", false, "Output in JSON format (shorthand)")
+	
+	// Custom usage message
+	flag.Usage = printHelp
+	
+	flag.Parse()
 
-	if showVersion {
+	if *showVersion {
 		fmt.Printf("%s v%s\n", AppName, Version)
 		return
 	}
 
 	// Run the main check
-	if err := run(outputJSON); err != nil {
+	if err := run(*outputJSON); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
@@ -97,18 +94,18 @@ func run(outputJSON bool) error {
 func printHelp() {
 	fmt.Printf(`%s v%s
 
-Kiểm tra usage quota của Antigravity AI từ terminal.
+Check Antigravity AI usage quota from the terminal.
 
 USAGE:
     agusage [OPTIONS]
 
 OPTIONS:
-    -h, --help      Hiển thị trợ giúp
-    -v, --version   Hiển thị phiên bản
-    -j, --json      Xuất định dạng JSON
+    -h, --help      Show help information
+    -v, --version   Show version information
+    -j, --json      Output in JSON format
 
 EXAMPLES:
-    agusage            Kiểm tra quota hiện tại
-    agusage --json     Xuất JSON để script
+    agusage            Check current quota
+    agusage --json     Output JSON for scripting
 `, AppName, Version)
 }

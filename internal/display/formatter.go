@@ -46,6 +46,19 @@ func showJSON(data *api.UsageData) {
 
 // showTable displays the usage data as a formatted table.
 func showTable(data *api.UsageData, isCached bool) {
+	printHeader(data, isCached)
+	
+	// Calculate totals
+	totalUsed, totalLimit, totalRemaining := calculateTotals(data.Models)
+	
+	// Print rows
+	printRows(data.Models)
+	
+	printFooter(totalUsed, totalLimit, totalRemaining, data.Tier, data.PromptCredit)
+	fmt.Println()
+}
+
+func printHeader(data *api.UsageData, isCached bool) {
 	// Header
 	fmt.Println()
 	fmt.Printf("%s%s🚀 Antigravity Usage Monitor%s\n", Bold, Cyan, Reset)
@@ -58,47 +71,46 @@ func showTable(data *api.UsageData, isCached bool) {
 	}
 	
 	// Table header
-	fmt.Printf("%-22s %4s %5s %6s %-14s %s\n",
+	fmt.Printf("%-24s %-6s %-6s %-6s %-12s %s\n",
 		"Model", "Used", "Limit", "Left", "Progress", "Reset")
 	fmt.Println(strings.Repeat("─", 70))
-	
-	// Calculate totals with deduplication for shared quota pools
-	// Use a map to track unique quota pools by their Used/Limit/Remaining signature
-	type quotaKey struct {
-		Used      int
-		Limit     int
-		Remaining int
-	}
+}
+
+type quotaKey struct {
+	Used      int
+	Limit     int
+	Remaining int
+}
+
+func calculateTotals(models []api.QuotaInfo) (int, int, int) {
 	uniqueQuotas := make(map[quotaKey]bool)
-	
-	totalUsed := 0
-	totalLimit := 0
-	totalRemaining := 0
-	
-	// Model rows
-	for _, model := range data.Models {
-		// Create a unique key for this quota pool
+	var totalUsed, totalLimit, totalRemaining int
+
+	for _, model := range models {
 		key := quotaKey{
 			Used:      model.Used,
 			Limit:     model.Limit,
 			Remaining: model.Remaining,
 		}
 		
-		// Only count this quota pool if we haven't seen it before
 		if !uniqueQuotas[key] {
 			uniqueQuotas[key] = true
 			totalUsed += model.Used
 			totalLimit += model.Limit
 			totalRemaining += model.Remaining
 		}
-		
-		// Color based on remaining percentage (not usage)
+	}
+	return totalUsed, totalLimit, totalRemaining
+}
+
+func printRows(models []api.QuotaInfo) {
+	for _, model := range models {
 		remainingPercent := 100 - model.UsagePercent
 		color := getRemainingColor(remainingPercent)
 		progressBar := createProgressBar(model.UsagePercent, 10)
 		resetStr := formatResetTime(model.ResetTime)
 		
-		fmt.Printf("%-22s %s%4d%s %5d %s%6d%s %-14s %s\n",
+		fmt.Printf("%-24s %s%-6d%s %-6d %s%-6d%s %-12s %s\n",
 			truncateString(model.ModelName, 22),
 			Cyan, model.Used, Reset,
 			model.Limit,
@@ -107,35 +119,35 @@ func showTable(data *api.UsageData, isCached bool) {
 			resetStr,
 		)
 	}
-	
-	// Footer separator
+}
+
+func printFooter(used, limit, remaining int, tier string, credits int) {
 	fmt.Println(strings.Repeat("─", 70))
 	
 	// Total usage summary
-	totalUsagePercent := 0
-	if totalLimit > 0 {
-		totalUsagePercent = (totalUsed * 100) / totalLimit
+	var totalUsagePercent int
+	if limit > 0 {
+		totalUsagePercent = (used * 100) / limit
 	}
 	totalRemainingPercent := 100 - totalUsagePercent
 	summaryColor := getRemainingColor(totalRemainingPercent)
+	
 	fmt.Printf("%s📊 Total: %d/%d used (%d%% remaining)%s\n",
-		summaryColor, totalUsed, totalLimit, totalRemainingPercent, Reset)
+		summaryColor, used, limit, totalRemainingPercent, Reset)
 	fmt.Println(strings.Repeat("─", 70))
 	
 	// Tier and credits
-	footer := []string{}
-	if data.Tier != "" {
-		footer = append(footer, fmt.Sprintf("Tier: %s%s%s", Cyan, data.Tier, Reset))
+	var footer []string
+	if tier != "" {
+		footer = append(footer, fmt.Sprintf("Tier: %s%s%s", Cyan, tier, Reset))
 	}
-	if data.PromptCredit > 0 {
-		footer = append(footer, fmt.Sprintf("Credits: %s%d%s", Green, data.PromptCredit, Reset))
+	if credits > 0 {
+		footer = append(footer, fmt.Sprintf("Credits: %s%d%s", Green, credits, Reset))
 	}
 	
 	if len(footer) > 0 {
 		fmt.Printf("%s%s%s\n", Dim, strings.Join(footer, " | "), Reset)
 	}
-	
-	fmt.Println()
 }
 
 // createProgressBar generates a visual progress bar.

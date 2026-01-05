@@ -1,5 +1,3 @@
-// Package api provides the client for communicating with the Antigravity
-// language server API.
 package api
 
 import (
@@ -48,6 +46,40 @@ type UsageData struct {
 	IsCached     bool        `json:"is_cached,omitempty"`
 }
 
+// Internal structs for JSON parsing
+type apiResponse struct {
+	UserStatus userStatusRaw `json:"userStatus"`
+}
+
+type userStatusRaw struct {
+	PlanName               string                 `json:"planName"`
+	CascadeModelConfigData cascadeModelConfigData `json:"cascadeModelConfigData"`
+	PromptCreditsInfo      promptCreditsInfo      `json:"promptCreditsInfo"`
+}
+
+type cascadeModelConfigData struct {
+	ClientModelConfigs []clientModelConfig `json:"clientModelConfigs"`
+}
+
+type clientModelConfig struct {
+	Label        string        `json:"label"`
+	QuotaInfo    quotaInfoRaw  `json:"quotaInfo"`
+	ModelOrAlias modelOrAlias  `json:"modelOrAlias"`
+}
+
+type modelOrAlias struct {
+	Model string `json:"model"`
+}
+
+type quotaInfoRaw struct {
+	RemainingFraction float64 `json:"remainingFraction"`
+	ResetTime         string  `json:"resetTime"`
+}
+
+type promptCreditsInfo struct {
+	RemainingCredits float64 `json:"remainingCredits"`
+}
+
 // NewClient creates a new API client with the given connection parameters.
 func NewClient(connectPort int, csrfToken string, httpPort int) *Client {
 	// Create HTTP client that skips TLS verification (local connection)
@@ -71,16 +103,16 @@ func (c *Client) GetUserStatus() (*UsageData, error) {
 	// Prepare request body (empty for GetUserStatus)
 	body := map[string]interface{}{}
 	
-	resp, err := c.makeRequest(GetUserStatusPath, body)
+	respBytes, err := c.makeRequest(GetUserStatusPath, body)
 	if err != nil {
 		return nil, fmt.Errorf("GetUserStatus failed: %w", err)
 	}
 	
-	return c.parseUserStatusResponse(resp)
+	return c.parseUserStatusResponse(respBytes)
 }
 
-// makeRequest performs an API request with proper headers.
-func (c *Client) makeRequest(path string, body interface{}) (map[string]interface{}, error) {
+// makeRequest performs an API request and returns raw bytes.
+func (c *Client) makeRequest(path string, body interface{}) ([]byte, error) {
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request body: %w", err)
@@ -102,7 +134,7 @@ func (c *Client) makeRequest(path string, body interface{}) (map[string]interfac
 }
 
 // doRequest performs the actual HTTP request.
-func (c *Client) doRequest(url string, body []byte) (map[string]interface{}, error) {
+func (c *Client) doRequest(url string, body []byte) ([]byte, error) {
 	req, err := http.NewRequest("POST", url, bytes.NewReader(body))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
@@ -124,93 +156,53 @@ func (c *Client) doRequest(url string, body []byte) (map[string]interface{}, err
 		return nil, fmt.Errorf("HTTP %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 	
-	respBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response: %w", err)
-	}
-	
-	var result map[string]interface{}
-	if err := json.Unmarshal(respBody, &result); err != nil {
-		return nil, fmt.Errorf("failed to parse response: %w", err)
-	}
-	
-	return result, nil
+	return io.ReadAll(resp.Body)
 }
 
 // parseUserStatusResponse converts the API response to UsageData.
-func (c *Client) parseUserStatusResponse(resp map[string]interface{}) (*UsageData, error) {
+func (c *Client) parseUserStatusResponse(respBytes []byte) (*UsageData, error) {
 	usage := &UsageData{
 		FetchedAt: time.Now(),
 		Models:    []QuotaInfo{},
 	}
 	
-	// Navigate to userStatus.cascadeModelConfigData.clientModelConfigs
-	userStatus, ok := resp["userStatus"].(map[string]interface{})
-	if !ok {
-		return usage, nil
+	var apiResp apiResponse
+	if err := json.Unmarshal(respBytes, &apiResp); err != nil {
+		return nil, fmt.Errorf("failed to parse response JSON: %w", err)
 	}
 	
-	// Try to get plan name from userStatus
-	if planName, ok := userStatus["planName"].(string); ok {
-		usage.Tier = planName
+	// Extract plan name
+	if apiResp.UserStatus.PlanName != "" {
+		usage.Tier = apiResp.UserStatus.PlanName
 	}
 	
-	// Get cascadeModelConfigData
-	cascadeData, ok := userStatus["cascadeModelConfigData"].(map[string]interface{})
-	if !ok {
-		return usage, nil
+	// Extract prompt credits
+	if apiResp.UserStatus.PromptCreditsInfo.RemainingCredits > 0 {
+		usage.PromptCredit = int(apiResp.UserStatus.PromptCreditsInfo.RemainingCredits)
 	}
 	
-	// Get clientModelConfigs array
-	modelConfigs, ok := cascadeData["clientModelConfigs"].([]interface{})
-	if !ok {
-		return usage, nil
-	}
-	
-	// Parse each model config
-	for _, mc := range modelConfigs {
-		config, ok := mc.(map[string]interface{})
-		if !ok {
-			continue
-		}
-		
+	// Process models
+	for _, config := range apiResp.UserStatus.CascadeModelConfigData.ClientModelConfigs {
 		info := QuotaInfo{
-			ModelName: getStringValue(config, "label", "Unknown"),
+			ModelName: config.Label,
 		}
 		
-		// Parse quotaInfo
-		if quotaInfo, ok := config["quotaInfo"].(map[string]interface{}); ok {
-			// remainingFraction is between 0 and 1
-			if remaining, ok := quotaInfo["remainingFraction"].(float64); ok {
-				info.UsagePercent = 100 - int(remaining*100)
-				info.Remaining = int(remaining * 100) // As percentage
-				info.Limit = 100
-				info.Used = 100 - info.Remaining
-			}
-			
-			// Reset time
-			if resetTime, ok := quotaInfo["resetTime"].(string); ok {
-				info.ResetTime = resetTime
-			}
+		// If label is missing, use a fallback (or skip?)
+		if info.ModelName == "" {
+			info.ModelName = "Unknown Model"
 		}
+
+		// Calculate remaining percentage from fraction (0.0 to 1.0)
+		remaining := config.QuotaInfo.RemainingFraction
+		info.UsagePercent = 100 - int(remaining*100)
+		info.Remaining = int(remaining * 100)
+		info.Limit = 100
+		info.Used = 100 - info.Remaining
+		
+		info.ResetTime = config.QuotaInfo.ResetTime
 		
 		usage.Models = append(usage.Models, info)
 	}
 	
-	// Get prompt credits from userStatus if available
-	if promptCredits, ok := userStatus["promptCreditsInfo"].(map[string]interface{}); ok {
-		if remaining, ok := promptCredits["remainingCredits"].(float64); ok {
-			usage.PromptCredit = int(remaining)
-		}
-	}
-	
 	return usage, nil
-}
-
-// getStringValue safely extracts a string value from a map.
-func getStringValue(m map[string]interface{}, key, defaultVal string) string {
-	if v, ok := m[key].(string); ok {
-		return v
-	}
-	return defaultVal
 }
