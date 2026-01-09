@@ -1,11 +1,30 @@
-# Antigravity Usage Checker - Install Script
+# ============================================================================
+# Antigravity Usage Checker - Install Script for Windows
+# ============================================================================
+#
+# WHAT THIS SCRIPT DOES:
+# 1. Downloads agusage.exe from GitHub Releases (or uses local copy if present)
+# 2. Installs to: %LOCALAPPDATA%\agusage\agusage.exe
+# 3. Adds the install directory to your PATH (user-level, no admin required)
+#
+# WHAT THIS SCRIPT DOES NOT DO:
+# - Does NOT require administrator privileges
+# - Does NOT modify system files
+# - Does NOT install any dependencies
+# - Does NOT send any data to external servers
+#
+# You can review this script before running. Source code:
+# https://github.com/tungcorn/antigravity-usage-checker
+#
 # Run: iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; . $env:TEMP\install.ps1
 # Install specific version: ... $env:TEMP\install.ps1 -Version 0.5.0
+# ============================================================================
 
 param(
-    [string]$Version = "latest"
+    [string]$Version = "latest"  # Default: download latest release
 )
 
+# Stop on any error
 $ErrorActionPreference = "Stop"
 
 if ($Version -eq "latest") {

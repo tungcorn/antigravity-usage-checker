@@ -8,6 +8,21 @@
 ![macOS](https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black)
 [![CI](https://github.com/tungcorn/antigravity-usage-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/tungcorn/antigravity-usage-checker/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/tungcorn/antigravity-usage-checker/actions/workflows/codeql.yml/badge.svg)](https://github.com/tungcorn/antigravity-usage-checker/actions/workflows/codeql.yml)
+
+## 🔒 Security
+
+This tool is designed to be transparent and safe:
+
+- ✅ **Local only** - Only connects to `localhost:4173` (Antigravity local server)
+- ✅ **No network calls** - Does NOT send any data to external servers
+- ✅ **No telemetry** - No tracking, analytics, or data collection
+- ✅ **Open source** - All code is public and auditable
+- ✅ **CodeQL scanned** - Automatically scanned for security vulnerabilities
+
+> 💡 You can review the [install scripts](install.ps1) before running them.
+
+---
 
 ## 🇬🇧 English
 

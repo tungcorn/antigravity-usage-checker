@@ -1,8 +1,27 @@
 #!/bin/bash
-# Antigravity Usage Checker - Installation Script for Linux/macOS
+# ============================================================================
+# Antigravity Usage Checker - Install Script for Linux/macOS
+# ============================================================================
+#
+# WHAT THIS SCRIPT DOES:
+# 1. Detects your OS (Linux/macOS) and architecture (amd64/arm64)
+# 2. Downloads the appropriate binary from GitHub Releases
+# 3. Installs to: /usr/local/bin/agusage (may require sudo)
+#
+# WHAT THIS SCRIPT DOES NOT DO:
+# - Does NOT install any dependencies
+# - Does NOT modify system configuration
+# - Does NOT send any data to external servers
+# - Does NOT run anything in the background
+#
+# You can review this script before running. Source code:
+# https://github.com/tungcorn/antigravity-usage-checker
+#
 # Usage: curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.sh | bash
 # Install specific version: curl -fsSL ... | bash -s -- -v 0.5.0
+# ============================================================================
 
+# Exit immediately if any command fails
 set -e
 
 # Colors
