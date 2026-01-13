@@ -2,7 +2,7 @@
 
 🚀 Check your Antigravity AI usage quota from terminal
 
-![Version](https://img.shields.io/badge/version-0.5.0-blue)
+![Version](https://img.shields.io/github/v/release/tungcorn/antigravity-usage-checker)
 ![Go](https://img.shields.io/badge/Go-1.21+-00ADD8?logo=go)
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=flat&logo=windows&logoColor=white)
 ![macOS](https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white)
@@ -14,7 +14,7 @@
 
 This tool is designed to be transparent and safe:
 
-- ✅ **Local only** - Only connects to `localhost:4173` (Antigravity local server)
+- ✅ **Local only** - Only connects to `localhost` (Antigravity local server)
 - ✅ **No network calls** - Does NOT send any data to external servers
 - ✅ **No telemetry** - No tracking, analytics, or data collection
 - ✅ **Open source** - All code is public and auditable
@@ -75,8 +75,16 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
    - macOS Intel: `antigravity-usage-checker-darwin-amd64.tar.gz`
    - macOS Apple Silicon: `antigravity-usage-checker-darwin-arm64.tar.gz`
    - Linux: `antigravity-usage-checker-linux-amd64.tar.gz`
-2. Extract and run the binary
-3. (Optional) Add to PATH
+
+2. **Extract** the archive to a folder of your choice
+
+3. **Run** the executable:
+   - Windows: Double-click `agusage.exe` or run from terminal
+   - macOS/Linux: Run `chmod +x agusage` first, then `./agusage`
+
+4. **(Optional) Add to PATH** for global access:
+   - Windows: Move `agusage.exe` to a folder in your PATH
+   - macOS/Linux: Move to `/usr/local/bin/` or add the folder to `$PATH`
 
 > ⚠️ Antigravity must be running
 
@@ -152,8 +160,16 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
    - macOS Intel: `antigravity-usage-checker-darwin-amd64.tar.gz`
    - macOS Apple Silicon: `antigravity-usage-checker-darwin-arm64.tar.gz`
    - Linux: `antigravity-usage-checker-linux-amd64.tar.gz`
-2. Giải nén và chạy binary
-3. (Tùy chọn) Thêm vào PATH
+
+2. **Giải nén** file vào thư mục bạn chọn
+
+3. **Chạy** chương trình:
+   - Windows: Double-click `agusage.exe` hoặc chạy từ terminal
+   - macOS/Linux: Chạy `chmod +x agusage` trước, sau đó `./agusage`
+
+4. **(Tùy chọn) Thêm vào PATH** để chạy từ mọi nơi:
+   - Windows: Di chuyển `agusage.exe` vào thư mục trong PATH
+   - macOS/Linux: Di chuyển vào `/usr/local/bin/` hoặc thêm thư mục vào `$PATH`
 
 > ⚠️ Antigravity phải đang chạy
 
@@ -203,7 +219,7 @@ go build -o agusage ./cmd/agusage/
 
 ## License
 
-MIT © 2024
+MIT © 2024-present
 
 ---
 
