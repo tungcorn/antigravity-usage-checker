@@ -84,13 +84,48 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R artifacts
 
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "📦 Release tag: $TAG"
+
+      - name: Extract release info from CHANGELOG
+        id: changelog
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          
+          # Extract the title line: ## [v0.5.2] Title Here -> v0.5.2 Title Here
+          TITLE_LINE=$(grep -E "^## \[$TAG\]" CHANGELOG.md | head -1 || echo "")
+          
+          if [ -z "$TITLE_LINE" ]; then
+            echo "⚠️ No changelog entry found for $TAG, using tag as title"
+            echo "title=$TAG" >> $GITHUB_OUTPUT
+            echo "body=Release $TAG" >> $GITHUB_OUTPUT
+          else
+            # Extract title: ## [v0.5.2] Title Here -> v0.5.2 Title Here
+            RELEASE_TITLE=$(echo "$TITLE_LINE" | sed 's/^## \[\([^]]*\)\] */\1 /')
+            echo "title=$RELEASE_TITLE" >> $GITHUB_OUTPUT
+            echo "📝 Release title: $RELEASE_TITLE"
+            
+            # Extract body: everything between this version header and the next ## or end of file
+            BODY=$(awk "/^## \[$TAG\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md)
+            
+            # Write body to file to handle multiline
+            echo "$BODY" > release_body.md
+            echo "body_file=release_body.md" >> $GITHUB_OUTPUT
+            echo "📄 Release body extracted"
+          fi
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          name: ${{ steps.changelog.outputs.title }}
+          body_path: ${{ steps.changelog.outputs.body_file }}
           files: |
             artifacts/**/*.zip
             artifacts/**/*.tar.gz
-          generate_release_notes: true
           draft: false
           prerelease: true
         env:
