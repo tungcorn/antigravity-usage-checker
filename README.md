@@ -10,6 +10,8 @@
 [![CI](https://github.com/tungcorn/antigravity-usage-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/tungcorn/antigravity-usage-checker/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/tungcorn/antigravity-usage-checker/actions/workflows/codeql.yml/badge.svg)](https://github.com/tungcorn/antigravity-usage-checker/actions/workflows/codeql.yml)
 
+![Screenshot](assets/image.png)
+
 ## 🔒 Security
 
 This tool is designed to be transparent and safe:
@@ -87,10 +89,6 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
    - macOS/Linux: Move to `/usr/local/bin/` or add the folder to `$PATH`
 
 > ⚠️ Antigravity must be running
-
-### Output
-
-![Screenshot](assets/image.png)
 
 ### Features ✨
 
@@ -172,10 +170,6 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
    - macOS/Linux: Di chuyển vào `/usr/local/bin/` hoặc thêm thư mục vào `$PATH`
 
 > ⚠️ Antigravity phải đang chạy
-
-### Kết quả
-
-![Screenshot](assets/image.png)
 
 ### Tính năng ✨
 
