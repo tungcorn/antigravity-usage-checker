@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.0] Cleaner Display & Percentage Format
+
+### Changed
+- Display usage as percentages (`Used %`) instead of misleading absolute numbers
+- Removed redundant `Left %` column (same info as 100 - Used)
+- Removed redundant percentage number from progress bar
+- Expanded model name column from 22 to 30 characters for full names
+
+### Fixed
+- Clarified that values are percentages, not request counts
+
+---
+
 ## [v1.0.1] Version Display Fix
 
 ### Fixed

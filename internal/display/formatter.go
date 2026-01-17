@@ -62,18 +62,18 @@ func printHeader(data *api.UsageData, isCached bool) {
 	// Header
 	fmt.Println()
 	fmt.Printf("%s%s🚀 Antigravity Usage Monitor%s\n", Bold, Cyan, Reset)
-	fmt.Println(strings.Repeat("─", 70))
+	fmt.Println(strings.Repeat("─", 68))
 	
 	// Cache indicator
 	if isCached || data.IsCached {
 		fmt.Printf("%s⚠️  Cached data from %s%s\n", Yellow, formatTime(data.FetchedAt), Reset)
-		fmt.Println(strings.Repeat("─", 70))
+		fmt.Println(strings.Repeat("─", 68))
 	}
 	
 	// Table header
-	fmt.Printf("%-24s %-6s %-6s %-6s %-12s %s\n",
-		"Model", "Used", "Limit", "Left", "Progress", "Reset")
-	fmt.Println(strings.Repeat("─", 70))
+	fmt.Printf("%-32s %-7s %-12s %s\n",
+		"Model", "Used %", "Progress", "Reset")
+	fmt.Println(strings.Repeat("─", 68))
 }
 
 type quotaKey struct {
@@ -110,11 +110,9 @@ func printRows(models []api.QuotaInfo) {
 		progressBar := createProgressBar(model.UsagePercent, 10)
 		resetStr := formatResetTime(model.ResetTime)
 		
-		fmt.Printf("%-24s %s%-6d%s %-6d %s%-6d%s %-12s %s\n",
-			truncateString(model.ModelName, 22),
-			Cyan, model.Used, Reset,
-			model.Limit,
-			color, model.Remaining, Reset,
+		fmt.Printf("%-32s %s%-7s%s %-12s %s\n",
+			truncateString(model.ModelName, 30),
+			color, fmt.Sprintf("%d%%", model.Used), Reset,
 			progressBar,
 			resetStr,
 		)
@@ -122,7 +120,7 @@ func printRows(models []api.QuotaInfo) {
 }
 
 func printFooter(used, limit, remaining int, tier string, credits int) {
-	fmt.Println(strings.Repeat("─", 70))
+	fmt.Println(strings.Repeat("─", 68))
 	
 	// Total usage summary
 	var totalUsagePercent int
@@ -132,9 +130,9 @@ func printFooter(used, limit, remaining int, tier string, credits int) {
 	totalRemainingPercent := 100 - totalUsagePercent
 	summaryColor := getRemainingColor(totalRemainingPercent)
 	
-	fmt.Printf("%s📊 Total: %d/%d used (%d%% remaining)%s\n",
-		summaryColor, used, limit, totalRemainingPercent, Reset)
-	fmt.Println(strings.Repeat("─", 70))
+	fmt.Printf("%s📊 Total: %d%% used (%d%% remaining)%s\n",
+		summaryColor, used, totalRemainingPercent, Reset)
+	fmt.Println(strings.Repeat("─", 68))
 	
 	// Tier and credits
 	var footer []string
@@ -166,12 +164,11 @@ func createProgressBar(percent, width int) string {
 	remainingPercent := 100 - percent
 	color := getRemainingColor(remainingPercent)
 	
-	bar := fmt.Sprintf("%s%s%s%s %2d%%",
+	bar := fmt.Sprintf("%s%s%s%s",
 		color,
 		strings.Repeat("█", filled),
 		strings.Repeat("░", empty),
 		Reset,
-		percent,
 	)
 	
 	return bar
