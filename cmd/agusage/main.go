@@ -12,10 +12,10 @@ import (
 	"github.com/tungcorn/antigravity-usage-checker/internal/display"
 )
 
-const (
-	Version = "0.5.2"
-	AppName = "Antigravity Usage Checker"
-)
+// Version is set by ldflags at build time
+var Version = "dev"
+
+const AppName = "Antigravity Usage Checker"
 
 func main() {
 	// Define flags

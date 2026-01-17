@@ -46,7 +46,8 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: |
           mkdir -p dist
-          go build -ldflags="-s -w" -o dist/agusage${{ matrix.ext }} ./cmd/agusage/
+          VERSION=${GITHUB_REF_NAME#v}
+          go build -ldflags="-s -w -X main.Version=${VERSION}" -o dist/agusage${{ matrix.ext }} ./cmd/agusage/
 
       - name: Create archive (Windows)
         if: matrix.goos == 'windows'

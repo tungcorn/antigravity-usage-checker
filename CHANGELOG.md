@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v1.0.1] Version Display Fix
+
+### Fixed
+- Version now correctly displays from release tag instead of hardcoded value
+
+### Changed
+- Auto-inject version via ldflags during release build
+
+---
+
 ## [v1.0.0] Enhanced Reset Time Display
 
 ### Added
