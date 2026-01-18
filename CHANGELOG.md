@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.1] Documentation & CI Updates
+
+### Changed
+- Add author to LICENSE
+- Improved README with bilingual support (Vietnamese/English) and anchor links
+- CI: Automatically append quick install instructions to release notes
+
+---
+
 ## [v2.0.0] Cleaner Display & Percentage Format
 
 ### Changed
