@@ -119,7 +119,10 @@ jobs:
       - name: Get previous tag
         id: prev_tag
         run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          # Get current tag
+          CURRENT_TAG="${{ steps.version.outputs.tag }}"
+          # Get previous tag by listing all tags sorted by version, excluding current
+          PREV_TAG=$(git tag --sort=-v:refname | grep -v "^${CURRENT_TAG}$" | head -1 || echo "")
           echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
           echo "📌 Previous tag: $PREV_TAG"
           
