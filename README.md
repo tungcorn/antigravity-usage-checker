@@ -35,6 +35,8 @@ This tool is designed to be transparent and safe:
 
 > **Note**: This tool only reads publicly available process information and communicates with localhost. No external network requests are made.
 
+> **⚠️ API Limitation**: A recent Google update changed the API to only return usage percentages at 20% intervals (0%, 20%, 40%, 60%, 80%, 100%). This affects all similar tools.
+
 ---
 <a id="english"></a>
 ## 🇬🇧 English
@@ -119,6 +121,8 @@ agusage --help   # Help
 ---
 <a id="vietnamese"></a>
 ## 🇻🇳 Tiếng Việt
+
+> **⚠️ Giới hạn API**: Bản cập nhật mới của Google đã thay đổi API, chỉ trả về phần trăm sử dụng theo các mốc 20% (0%, 20%, 40%, 60%, 80%, 100%). Điều này ảnh hưởng đến tất cả các tool tương tự.
 
 ### Cài đặt nhanh
 
