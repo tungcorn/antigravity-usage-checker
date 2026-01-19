@@ -89,8 +89,21 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
    - macOS/Linux: Run `chmod +x agusage` first, then `./agusage`
 
 4. **(Optional) Add to PATH** for global access:
-   - Windows: Move `agusage.exe` to a folder in your PATH
-   - macOS/Linux: Move to `/usr/local/bin/` or add the folder to `$PATH`
+   - **Windows**: 
+     1. Move `agusage.exe` to a folder (e.g., `C:\Tools\`)
+     2. Press `Win + R`, type `sysdm.cpl`, press Enter
+     3. Go to **Advanced** → **Environment Variables**
+     4. Under **User variables**, select `Path` → **Edit** → **New**
+     5. Add your folder path (e.g., `C:\Tools`) → **OK**
+     6. Restart your terminal
+   - **macOS/Linux**: Move to `/usr/local/bin/` (recommended):
+     ```bash
+     sudo mv agusage /usr/local/bin/
+     ```
+     Or add custom folder to PATH in `~/.bashrc` or `~/.zshrc`:
+     ```bash
+     export PATH="$PATH:/path/to/your/folder"
+     ```
 
 > ⚠️ Antigravity must be running
 
@@ -172,8 +185,21 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
    - macOS/Linux: Chạy `chmod +x agusage` trước, sau đó `./agusage`
 
 4. **(Tùy chọn) Thêm vào PATH** để chạy từ mọi nơi:
-   - Windows: Di chuyển `agusage.exe` vào thư mục trong PATH
-   - macOS/Linux: Di chuyển vào `/usr/local/bin/` hoặc thêm thư mục vào `$PATH`
+   - **Windows**: 
+     1. Di chuyển `agusage.exe` vào thư mục (ví dụ: `C:\Tools\`)
+     2. Nhấn `Win + R`, gõ `sysdm.cpl`, nhấn Enter
+     3. Chọn tab **Advanced** → **Environment Variables**
+     4. Trong **User variables**, chọn `Path` → **Edit** → **New**
+     5. Thêm đường dẫn thư mục (ví dụ: `C:\Tools`) → **OK**
+     6. Khởi động lại terminal
+   - **macOS/Linux**: Di chuyển vào `/usr/local/bin/` (khuyến nghị):
+     ```bash
+     sudo mv agusage /usr/local/bin/
+     ```
+     Hoặc thêm thư mục tùy chọn vào PATH trong `~/.bashrc` hoặc `~/.zshrc`:
+     ```bash
+     export PATH="$PATH:/path/to/your/folder"
+     ```
 
 > ⚠️ Antigravity phải đang chạy
 
