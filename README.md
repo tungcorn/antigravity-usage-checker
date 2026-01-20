@@ -245,7 +245,7 @@ go build -o agusage ./cmd/agusage/
 
 ## License
 
-MIT © 2024-present
+[MIT](LICENSE) © 2024-present
 
 ---
 
