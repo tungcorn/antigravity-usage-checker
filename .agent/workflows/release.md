@@ -35,17 +35,9 @@ Follow these steps to create a new release:
 - Ensure build succeeds
 - Remove test build file after verification
 
-## 4. Commit changes
-- Stage all changes: `git add .`
-- Commit with message: `chore: prepare release vX.X.X`
-
-## 5. Create tag and push
+## 4. Commit and push changes
 // turbo
-- Create tag: `git tag vX.X.X`
-// turbo
-- Push code: `git push origin main`
-// turbo
-- Push tag: `git push origin vX.X.X`
+- Run: `git add . && git commit -m "chore: prepare release vX.X.X" && git tag vX.X.X && git push origin main && git push origin vX.X.X`
 
 ## 6. Confirm completion
 - Notify user that workflow is complete
