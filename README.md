@@ -35,7 +35,11 @@ This tool is designed to be transparent and safe:
 
 > **Note**: This tool only reads publicly available process information and communicates with localhost. No external network requests are made.
 
-> **⚠️ API Limitation**: A recent Google update changed the API to only return usage percentages at 20% intervals (0%, 20%, 40%, 60%, 80%, 100%). This affects all similar tools.
+## ⚠️ Known Limitations
+
+**Quota Precision**: The Antigravity Local API typically updates usage statistics at specific milestones (e.g., 0%, 20%, 40%, 60%, 80%).
+- This is a limitation of the local API that this tool relies on.
+- Other tools (like *Oh My OpenCode*) may show more granular percentages by hooking directly into the IDE's internal event stream or CLI token counter, which is a different approach than the safe, read-only API method used by this tool.
 
 ---
 <a id="english"></a>
@@ -135,7 +139,11 @@ agusage --help   # Help
 <a id="vietnamese"></a>
 ## 🇻🇳 Tiếng Việt
 
-> **⚠️ Giới hạn API**: Bản cập nhật mới của Google đã thay đổi API, chỉ trả về phần trăm sử dụng theo các mốc 20% (0%, 20%, 40%, 60%, 80%, 100%). Điều này ảnh hưởng đến tất cả các tool tương tự.
+## ⚠️ Hạn chế đã biết
+
+**Độ chính xác Quota**: API nội bộ của Antigravity thường chỉ cập nhật thống kê sử dụng theo các mốc nhất định (ví dụ: 0%, 20%, 40%, 60%, 80%).
+- Đây là giới hạn của API mà tool này sử dụng.
+- Các công cụ khác (như *Oh My OpenCode*) có thể hiển thị phần trăm chi tiết hơn bằng cách can thiệp trực tiếp vào luồng sự kiện của IDE hoặc đếm token, cách tiếp cận này khác với phương pháp gọi API an toàn (read-only) mà tool này sử dụng.
 
 ### Cài đặt nhanh
 
