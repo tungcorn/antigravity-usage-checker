@@ -61,21 +61,21 @@ func showTable(data *api.UsageData, isCached bool) {
 func printHeader(data *api.UsageData, isCached bool) {
 	// Header with box drawing
 	fmt.Println()
-	fmt.Println("┌" + strings.Repeat("─", 68) + "┐")
-	fmt.Printf("│ %s%s🚀 Antigravity Usage Monitor%s%-35s│\n", Bold, Cyan, Reset, "")
+	fmt.Println("┌" + strings.Repeat("─", 73) + "┐")
+	fmt.Printf("│ %s%s🚀 Antigravity Usage Monitor%s%-44s│\n", Bold, Cyan, Reset, "")
 
 	// Cache indicator
 	if isCached || data.IsCached {
-		fmt.Println("├" + strings.Repeat("─", 68) + "┤")
-		fmt.Printf("│ %s⚠️  Cached data from %s%s%-28s│\n", Yellow, formatTime(data.FetchedAt), Reset, "")
+		fmt.Println("├" + strings.Repeat("─", 73) + "┤")
+		fmt.Printf("│ %s⚠️  Cached data from %s%s%-32s│\n", Yellow, formatTime(data.FetchedAt), Reset, "")
 	}
 
-	fmt.Println("├" + strings.Repeat("─", 68) + "┤")
+	fmt.Println("├" + strings.Repeat("─", 73) + "┤")
 
 	// Table header
-	fmt.Printf("│ %-30s %-7s %-14s %-12s│\n",
+	fmt.Printf("│ %-30s %-7s %-14s %-18s│\n",
 		"Model", "Used", "Progress", "Reset")
-	fmt.Println("├" + strings.Repeat("─", 68) + "┤")
+	fmt.Println("├" + strings.Repeat("─", 73) + "┤")
 }
 
 type quotaKey struct {
@@ -124,17 +124,20 @@ func printRows(models []api.QuotaInfo) {
 
 		usedStr := formatPercent(model.Used)
 
-		fmt.Printf("│ %-30s %s%-7s%s %s %-12s│\n",
+		// Truncate plain text first
+		truncatedReset := truncateString(resetStr, 17)
+
+		fmt.Printf("│ %-30s %s%-7s%s %s %s%-18s%s│\n",
 			truncateString(model.ModelName, 28),
 			color, usedStr, Reset,
 			progressBar,
-			truncateString(resetStr, 11),
+			Dim, truncatedReset, Reset,
 		)
 	}
 }
 
 func printFooter(used, limit, remaining float64, tier string, credits int) {
-	fmt.Println(strings.Repeat("─", 68))
+	fmt.Println(strings.Repeat("─", 73))
 
 	// Total usage summary
 	var totalUsagePercent float64
@@ -146,7 +149,7 @@ func printFooter(used, limit, remaining float64, tier string, credits int) {
 
 	fmt.Printf("%s📊 Total: %.1f%% used (%.1f%% remaining)%s\n",
 		summaryColor, totalUsagePercent, totalRemainingPercent, Reset)
-	fmt.Println(strings.Repeat("─", 68))
+	fmt.Println(strings.Repeat("─", 73))
 
 	// Tier and credits
 	var footer []string
@@ -230,7 +233,7 @@ func formatResetTime(resetTimeStr string) string {
 
 	// If already reset
 	if diff <= 0 {
-		return Dim + "reset" + Reset
+		return "reset"
 	}
 
 	// Convert reset time to local timezone for display
@@ -242,7 +245,7 @@ func formatResetTime(resetTimeStr string) string {
 	minutes := int(diff.Minutes()) % 60
 
 	if hours > 0 {
-		return fmt.Sprintf("%s%dh %dm (%s)%s", Dim, hours, minutes, exactTime, Reset)
+		return fmt.Sprintf("%dh %dm (%s)", hours, minutes, exactTime)
 	}
-	return fmt.Sprintf("%s%dm (%s)%s", Dim, minutes, exactTime, Reset)
+	return fmt.Sprintf("%dm (%s)", minutes, exactTime)
 }
