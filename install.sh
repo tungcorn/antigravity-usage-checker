@@ -125,6 +125,15 @@ else
     sudo chmod +x "$INSTALL_DIR/$BINARY_NAME"
 fi
 
+# Create alias 'agu' for convenience
+ALIAS_NAME="agu"
+if [ -w "$INSTALL_DIR" ]; then
+    ln -sf "$INSTALL_DIR/$BINARY_NAME" "$INSTALL_DIR/$ALIAS_NAME"
+else
+    sudo ln -sf "$INSTALL_DIR/$BINARY_NAME" "$INSTALL_DIR/$ALIAS_NAME"
+fi
+echo -e "${GREEN}✅ Created alias 'agu' for quick access${NC}"
+
 # Verify installation
 if command -v agusage &> /dev/null; then
     echo ""

@@ -95,6 +95,11 @@ if (Test-Path $localExe) {
 
 Write-Host "Installed to: $installDir" -ForegroundColor Green
 
+# Create alias 'agu' for convenience
+$aguPath = "$installDir\agu.exe"
+Copy-Item $exePath $aguPath -Force
+Write-Host "Created alias 'agu' for quick access" -ForegroundColor Green
+
 # Add to PATH
 $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($userPath -notlike "*$installDir*") {

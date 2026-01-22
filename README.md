@@ -122,7 +122,8 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
 ### Commands
 
 ```bash
-agusage          # Show quota
+agusage          # Show quota (or use 'agu' for short)
+agu              # Shorthand alias for agusage
 agusage --json   # JSON output
 agusage --help   # Help
 ```
@@ -222,7 +223,8 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
 ### Các lệnh
 
 ```bash
-agusage          # Xem quota
+agusage          # Xem quota (hoặc dùng 'agu' cho ngắn gọn)
+agu              # Tên rút gọn của agusage
 agusage --json   # Xuất JSON
 agusage --help   # Trợ giúp
 ```

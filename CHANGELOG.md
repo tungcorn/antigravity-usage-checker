@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.1.0] Add Alias Command
+
+### Added
+- **Alias Command**: Added `agu` as a shorthand alias for `agusage`
+  -Windows: Creates `agu.exe` alongside `agusage.exe`
+  - macOS/Linux: Creates symlink `agu` -> `agusage`
+- Updated install scripts to automatically create the alias during installation
+- Updated documentation to introduce both command names
+
+---
+
 ## [v2.0.2] Fix Calculation & Display
 
 ### Fixed
