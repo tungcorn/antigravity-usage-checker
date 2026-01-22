@@ -30,7 +30,7 @@ func ShowUsage(data *api.UsageData, asJSON bool, isCached bool) {
 		showJSON(data)
 		return
 	}
-	
+
 	showTable(data, isCached)
 }
 
@@ -47,44 +47,46 @@ func showJSON(data *api.UsageData) {
 // showTable displays the usage data as a formatted table.
 func showTable(data *api.UsageData, isCached bool) {
 	printHeader(data, isCached)
-	
+
 	// Calculate totals
 	totalUsed, totalLimit, totalRemaining := calculateTotals(data.Models)
-	
+
 	// Print rows
 	printRows(data.Models)
-	
+
 	printFooter(totalUsed, totalLimit, totalRemaining, data.Tier, data.PromptCredit)
 	fmt.Println()
 }
 
 func printHeader(data *api.UsageData, isCached bool) {
-	// Header
+	// Header with box drawing
 	fmt.Println()
-	fmt.Printf("%s%s🚀 Antigravity Usage Monitor%s\n", Bold, Cyan, Reset)
-	fmt.Println(strings.Repeat("─", 68))
-	
+	fmt.Println("┌" + strings.Repeat("─", 68) + "┐")
+	fmt.Printf("│ %s%s🚀 Antigravity Usage Monitor%s%-35s│\n", Bold, Cyan, Reset, "")
+
 	// Cache indicator
 	if isCached || data.IsCached {
-		fmt.Printf("%s⚠️  Cached data from %s%s\n", Yellow, formatTime(data.FetchedAt), Reset)
-		fmt.Println(strings.Repeat("─", 68))
+		fmt.Println("├" + strings.Repeat("─", 68) + "┤")
+		fmt.Printf("│ %s⚠️  Cached data from %s%s%-28s│\n", Yellow, formatTime(data.FetchedAt), Reset, "")
 	}
-	
+
+	fmt.Println("├" + strings.Repeat("─", 68) + "┤")
+
 	// Table header
-	fmt.Printf("%-32s %-7s %-12s %s\n",
-		"Model", "Used %", "Progress", "Reset")
-	fmt.Println(strings.Repeat("─", 68))
+	fmt.Printf("│ %-30s %-7s %-14s %-12s│\n",
+		"Model", "Used", "Progress", "Reset")
+	fmt.Println("├" + strings.Repeat("─", 68) + "┤")
 }
 
 type quotaKey struct {
-	Used      int
-	Limit     int
-	Remaining int
+	Used      float64
+	Limit     float64
+	Remaining float64
 }
 
-func calculateTotals(models []api.QuotaInfo) (int, int, int) {
+func calculateTotals(models []api.QuotaInfo) (float64, float64, float64) {
 	uniqueQuotas := make(map[quotaKey]bool)
-	var totalUsed, totalLimit, totalRemaining int
+	var totalUsed, totalLimit, totalRemaining float64
 
 	for _, model := range models {
 		key := quotaKey{
@@ -92,7 +94,7 @@ func calculateTotals(models []api.QuotaInfo) (int, int, int) {
 			Limit:     model.Limit,
 			Remaining: model.Remaining,
 		}
-		
+
 		if !uniqueQuotas[key] {
 			uniqueQuotas[key] = true
 			totalUsed += model.Used
@@ -107,33 +109,35 @@ func printRows(models []api.QuotaInfo) {
 	for _, model := range models {
 		remainingPercent := 100 - model.UsagePercent
 		color := getRemainingColor(remainingPercent)
-		progressBar := createProgressBar(model.UsagePercent, 10)
+		progressBar := createProgressBar(model.UsagePercent, 14)
 		resetStr := formatResetTime(model.ResetTime)
-		
-		fmt.Printf("%-32s %s%-7s%s %-12s %s\n",
-			truncateString(model.ModelName, 30),
-			color, fmt.Sprintf("%d%%", model.Used), Reset,
+
+		usedStr := formatPercent(model.Used)
+
+		fmt.Printf("│ %-30s %s%-7s%s %s %-12s│\n",
+			truncateString(model.ModelName, 28),
+			color, usedStr, Reset,
 			progressBar,
-			resetStr,
+			truncateString(resetStr, 11),
 		)
 	}
 }
 
-func printFooter(used, limit, remaining int, tier string, credits int) {
+func printFooter(used, limit, remaining float64, tier string, credits int) {
 	fmt.Println(strings.Repeat("─", 68))
-	
+
 	// Total usage summary
-	var totalUsagePercent int
+	var totalUsagePercent float64
 	if limit > 0 {
 		totalUsagePercent = (used * 100) / limit
 	}
 	totalRemainingPercent := 100 - totalUsagePercent
 	summaryColor := getRemainingColor(totalRemainingPercent)
-	
-	fmt.Printf("%s📊 Total: %d%% used (%d%% remaining)%s\n",
+
+	fmt.Printf("%s📊 Total: %.1f%% used (%.1f%% remaining)%s\n",
 		summaryColor, used, totalRemainingPercent, Reset)
 	fmt.Println(strings.Repeat("─", 68))
-	
+
 	// Tier and credits
 	var footer []string
 	if tier != "" {
@@ -142,40 +146,40 @@ func printFooter(used, limit, remaining int, tier string, credits int) {
 	if credits > 0 {
 		footer = append(footer, fmt.Sprintf("Credits: %s%d%s", Green, credits, Reset))
 	}
-	
+
 	if len(footer) > 0 {
 		fmt.Printf("%s%s%s\n", Dim, strings.Join(footer, " | "), Reset)
 	}
 }
 
 // createProgressBar generates a visual progress bar.
-func createProgressBar(percent, width int) string {
+func createProgressBar(percent float64, width int) string {
 	if percent > 100 {
 		percent = 100
 	}
 	if percent < 0 {
 		percent = 0
 	}
-	
-	filled := width * percent / 100
+
+	filled := int(float64(width) * percent / 100)
 	empty := width - filled
-	
+
 	// Color based on remaining percentage
 	remainingPercent := 100 - percent
 	color := getRemainingColor(remainingPercent)
-	
+
 	bar := fmt.Sprintf("%s%s%s%s",
 		color,
 		strings.Repeat("█", filled),
 		strings.Repeat("░", empty),
 		Reset,
 	)
-	
+
 	return bar
 }
 
 // getRemainingColor returns the appropriate color based on remaining percentage.
-func getRemainingColor(remainingPercent int) string {
+func getRemainingColor(remainingPercent float64) string {
 	switch {
 	case remainingPercent > 50:
 		return Green
@@ -204,29 +208,29 @@ func formatResetTime(resetTimeStr string) string {
 	if resetTimeStr == "" {
 		return "-"
 	}
-	
+
 	// Parse ISO 8601 timestamp
 	resetTime, err := time.Parse(time.RFC3339, resetTimeStr)
 	if err != nil {
 		return "-"
 	}
-	
+
 	now := time.Now()
 	diff := resetTime.Sub(now)
-	
+
 	// If already reset
 	if diff <= 0 {
 		return Dim + "reset" + Reset
 	}
-	
+
 	// Convert reset time to local timezone for display
 	localResetTime := resetTime.Local()
 	exactTime := localResetTime.Format("15:04")
-	
+
 	// Format as relative time with exact time
 	hours := int(diff.Hours())
 	minutes := int(diff.Minutes()) % 60
-	
+
 	if hours > 0 {
 		return fmt.Sprintf("%s%dh %dm (%s)%s", Dim, hours, minutes, exactTime, Reset)
 	}

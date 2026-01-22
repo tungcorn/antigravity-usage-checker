@@ -11,7 +11,7 @@ import (
 func TestCreateProgressBar(t *testing.T) {
 	tests := []struct {
 		name    string
-		percent int
+		percent float64
 		width   int
 		wantLen int // Length of generated bar (approximate, without color codes)
 	}{
@@ -40,12 +40,17 @@ func TestCreateProgressBar(t *testing.T) {
 			percent: -10,
 			width:   10,
 		},
+		{
+			name:    "Decimal percent",
+			percent: 45.5,
+			width:   10,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			bar := createProgressBar(tt.percent, tt.width)
-			
+
 			// Just verify it doesn't panic and returns a non-empty string
 			if len(bar) == 0 {
 				t.Error("createProgressBar() returned empty string")
@@ -83,7 +88,7 @@ func TestFormatTime(t *testing.T) {
 	testTime := time.Date(2024, 12, 31, 14, 30, 45, 0, time.UTC)
 	got := formatTime(testTime)
 	want := "14:30:45 31/12/2024"
-	
+
 	if got != want {
 		t.Errorf("formatTime() = %q, want %q", got, want)
 	}
@@ -146,18 +151,18 @@ func TestShowUsageDoesNotPanic(t *testing.T) {
 				Models: []api.QuotaInfo{
 					{
 						ModelName:    "Claude Sonnet 4",
-						Used:         50,
+						Used:         50.5,
 						Limit:        100,
-						Remaining:    50,
-						UsagePercent: 50,
+						Remaining:    49.5,
+						UsagePercent: 50.5,
 						ResetTime:    "2024-12-31T23:59:59Z",
 					},
 					{
 						ModelName:    "GPT-4o",
-						Used:         80,
+						Used:         80.3,
 						Limit:        100,
-						Remaining:    20,
-						UsagePercent: 80,
+						Remaining:    19.7,
+						UsagePercent: 80.3,
 						ResetTime:    "",
 					},
 				},
@@ -216,7 +221,7 @@ func TestShowUsageDoesNotPanic(t *testing.T) {
 					t.Errorf("ShowUsage() panicked: %v", r)
 				}
 			}()
-			
+
 			ShowUsage(tt.data, tt.asJSON, tt.isCached)
 		})
 	}

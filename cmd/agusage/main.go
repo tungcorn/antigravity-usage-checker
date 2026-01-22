@@ -21,13 +21,13 @@ func main() {
 	// Define flags
 	showVersion := flag.Bool("version", false, "Show version information")
 	flag.BoolVar(showVersion, "v", false, "Show version information (shorthand)")
-	
+
 	outputJSON := flag.Bool("json", false, "Output in JSON format")
 	flag.BoolVar(outputJSON, "j", false, "Output in JSON format (shorthand)")
-	
+
 	// Custom usage message
 	flag.Usage = printHelp
-	
+
 	flag.Parse()
 
 	if *showVersion {
@@ -43,12 +43,10 @@ func main() {
 }
 
 func run(outputJSON bool) error {
-	// Step 1: Find Antigravity process and extract info
 	fmt.Println("🔍 Scanning for Antigravity server...")
-	
+
 	processInfo, err := discovery.FindAntigravityProcess()
 	if err != nil {
-		// Try cache fallback
 		fmt.Println("⚠️  Antigravity not running, checking cache...")
 		cachedData, cacheErr := cache.LoadLastKnown()
 		if cacheErr != nil {
@@ -57,10 +55,9 @@ func run(outputJSON bool) error {
 		display.ShowUsage(cachedData, outputJSON, true)
 		return nil
 	}
-	
+
 	fmt.Printf("✅ Found server on port %d (PID: %d)\n", processInfo.ConnectPort, processInfo.PID)
-	
-	// Step 2: Load OAuth credentials (optional, for future use)
+
 	creds, _ := auth.LoadCredentials()
 	if creds != nil {
 		if creds.IsExpired() {
@@ -69,29 +66,39 @@ func run(outputJSON bool) error {
 			fmt.Printf("✅ Credentials loaded (expires in %d min)\n", creds.ExpiresInMinutes())
 		}
 	}
-	
-	// Step 3: Call API to get quota
+
 	fmt.Println("📡 Fetching quota data...")
-	
-	client := api.NewClient(processInfo.ConnectPort, processInfo.CSRFToken, processInfo.HTTPPort)
-	quota, err := client.GetUserStatus()
-	if err != nil {
-		// Try cache fallback on API error
-		fmt.Printf("⚠️  API call failed: %v\n", err)
-		cachedData, cacheErr := cache.LoadLastKnown()
-		if cacheErr != nil {
-			return fmt.Errorf("API call failed and no cached data: %v", err)
+
+	var quota *api.UsageData
+
+	if creds != nil && !creds.IsExpired() {
+		googleClient := api.NewGoogleCloudClient(creds.AccessToken)
+		quota, err = googleClient.GetUsageData()
+		if err != nil {
+			fmt.Printf("⚠️  Google Cloud API failed: %v\n", err)
+			fmt.Println("📡 Falling back to local server API...")
+		} else {
+			fmt.Println("✅ Got exact quota from Google Cloud API")
 		}
-		display.ShowUsage(cachedData, outputJSON, true)
-		return nil
 	}
-	
-	// Save to cache for future fallback
+
+	if quota == nil {
+		client := api.NewClient(processInfo.ConnectPort, processInfo.CSRFToken, processInfo.HTTPPort)
+		quota, err = client.GetUserStatus()
+		if err != nil {
+			fmt.Printf("⚠️  Local API call failed: %v\n", err)
+			cachedData, cacheErr := cache.LoadLastKnown()
+			if cacheErr != nil {
+				return fmt.Errorf("all API calls failed and no cached data: %v", err)
+			}
+			display.ShowUsage(cachedData, outputJSON, true)
+			return nil
+		}
+	}
+
 	cache.Save(quota)
-	
-	// Step 4: Display result
 	display.ShowUsage(quota, outputJSON, false)
-	
+
 	return nil
 }
 

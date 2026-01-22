@@ -14,7 +14,7 @@ const (
 	// API endpoints
 	GetUserStatusPath      = "/exa.language_server_pb.LanguageServerService/GetUserStatus"
 	GetCommandModelConfigs = "/exa.language_server_pb.LanguageServerService/GetCommandModelConfigs"
-	
+
 	// Request timeout
 	RequestTimeout = 10 * time.Second
 )
@@ -29,12 +29,12 @@ type Client struct {
 
 // QuotaInfo contains quota information for a specific model.
 type QuotaInfo struct {
-	ModelName    string `json:"model_name"`
-	Used         int    `json:"used"`
-	Limit        int    `json:"limit"`
-	Remaining    int    `json:"remaining"`
-	ResetTime    string `json:"reset_time"`
-	UsagePercent int    `json:"usage_percent"`
+	ModelName    string  `json:"model_name"`
+	Used         float64 `json:"used"`
+	Limit        float64 `json:"limit"`
+	Remaining    float64 `json:"remaining"`
+	ResetTime    string  `json:"reset_time"`
+	UsagePercent float64 `json:"usage_percent"`
 }
 
 // UsageData contains the complete usage information.
@@ -62,9 +62,9 @@ type cascadeModelConfigData struct {
 }
 
 type clientModelConfig struct {
-	Label        string        `json:"label"`
-	QuotaInfo    quotaInfoRaw  `json:"quotaInfo"`
-	ModelOrAlias modelOrAlias  `json:"modelOrAlias"`
+	Label        string       `json:"label"`
+	QuotaInfo    quotaInfoRaw `json:"quotaInfo"`
+	ModelOrAlias modelOrAlias `json:"modelOrAlias"`
 }
 
 type modelOrAlias struct {
@@ -90,7 +90,7 @@ func NewClient(connectPort int, csrfToken string, httpPort int) *Client {
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // #nosec G402
 	}
-	
+
 	return &Client{
 		connectPort: connectPort,
 		httpPort:    httpPort,
@@ -106,12 +106,12 @@ func NewClient(connectPort int, csrfToken string, httpPort int) *Client {
 func (c *Client) GetUserStatus() (*UsageData, error) {
 	// Prepare request body (empty for GetUserStatus)
 	body := map[string]interface{}{}
-	
+
 	respBytes, err := c.makeRequest(GetUserStatusPath, body)
 	if err != nil {
 		return nil, fmt.Errorf("GetUserStatus failed: %w", err)
 	}
-	
+
 	return c.parseUserStatusResponse(respBytes)
 }
 
@@ -121,7 +121,7 @@ func (c *Client) makeRequest(path string, body interface{}) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request body: %w", err)
 	}
-	
+
 	// Try HTTPS first, then fall back to HTTP
 	url := fmt.Sprintf("https://127.0.0.1:%d%s", c.connectPort, path)
 	resp, err := c.doRequest(url, jsonBody)
@@ -133,7 +133,7 @@ func (c *Client) makeRequest(path string, body interface{}) ([]byte, error) {
 			return nil, err
 		}
 	}
-	
+
 	return resp, nil
 }
 
@@ -143,23 +143,23 @@ func (c *Client) doRequest(url string, body []byte) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
-	
+
 	// Set required headers
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Connect-Protocol-Version", "1")
 	req.Header.Set("X-Codeium-Csrf-Token", c.csrfToken)
-	
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		return nil, fmt.Errorf("HTTP %d: %s", resp.StatusCode, string(bodyBytes))
 	}
-	
+
 	return io.ReadAll(resp.Body)
 }
 
@@ -169,28 +169,28 @@ func (c *Client) parseUserStatusResponse(respBytes []byte) (*UsageData, error) {
 		FetchedAt: time.Now(),
 		Models:    []QuotaInfo{},
 	}
-	
+
 	var apiResp apiResponse
 	if err := json.Unmarshal(respBytes, &apiResp); err != nil {
 		return nil, fmt.Errorf("failed to parse response JSON: %w", err)
 	}
-	
+
 	// Extract plan name
 	if apiResp.UserStatus.PlanName != "" {
 		usage.Tier = apiResp.UserStatus.PlanName
 	}
-	
+
 	// Extract prompt credits
 	if apiResp.UserStatus.PromptCreditsInfo.RemainingCredits > 0 {
 		usage.PromptCredit = int(apiResp.UserStatus.PromptCreditsInfo.RemainingCredits)
 	}
-	
+
 	// Process models
 	for _, config := range apiResp.UserStatus.CascadeModelConfigData.ClientModelConfigs {
 		info := QuotaInfo{
 			ModelName: config.Label,
 		}
-		
+
 		// If label is missing, use model name as fallback
 		if info.ModelName == "" {
 			if config.ModelOrAlias.Model != "" {
@@ -202,15 +202,15 @@ func (c *Client) parseUserStatusResponse(respBytes []byte) (*UsageData, error) {
 
 		// Calculate remaining percentage from fraction (0.0 to 1.0)
 		remaining := config.QuotaInfo.RemainingFraction
-		info.UsagePercent = 100 - int(remaining*100)
-		info.Remaining = int(remaining * 100)
+		info.Remaining = remaining * 100
+		info.UsagePercent = 100 - info.Remaining
 		info.Limit = 100
 		info.Used = 100 - info.Remaining
-		
+
 		info.ResetTime = config.QuotaInfo.ResetTime
-		
+
 		usage.Models = append(usage.Models, info)
 	}
-	
+
 	return usage, nil
 }

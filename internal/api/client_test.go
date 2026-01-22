@@ -163,16 +163,16 @@ func TestParseUserStatusResponseModelDetails(t *testing.T) {
 
 	// remainingFraction = 0.25 means 25% remaining
 	// So: Remaining = 25, Used = 75, Limit = 100, UsagePercent = 75
-	if model.Remaining != 25 {
-		t.Errorf("Remaining = %d, want %d", model.Remaining, 25)
+	if model.Remaining != 25.0 {
+		t.Errorf("Remaining = %.1f, want %.1f", model.Remaining, 25.0)
 	}
 
-	if model.Used != 75 {
-		t.Errorf("Used = %d, want %d", model.Used, 75)
+	if model.Used != 75.0 {
+		t.Errorf("Used = %.1f, want %.1f", model.Used, 75.0)
 	}
 
-	if model.UsagePercent != 75 {
-		t.Errorf("UsagePercent = %d, want %d", model.UsagePercent, 75)
+	if model.UsagePercent != 75.0 {
+		t.Errorf("UsagePercent = %.1f, want %.1f", model.UsagePercent, 75.0)
 	}
 
 	if model.ResetTime != "2024-12-31T23:59:59Z" {
