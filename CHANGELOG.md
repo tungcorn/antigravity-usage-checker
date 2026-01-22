@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.2] Fix Calculation & Display
+
+### Fixed
+- **Total Calculation**: Corrected total usage percentage (now uses weighted average).
+- **Display Alignment**: Fixed broken table borders and column alignment.
+- **Color Bleeding**: Fixed issue where text color spilled into subsequent rows.
+- **Data Accuracy**: Improved detection of shared quotas using reset time.
+- **UX**: Expanded "Reset" column to show full timestamp without truncation.
+
+---
+
 ## [v2.0.1] Documentation & CI Updates
 
 ### Changed
