@@ -82,6 +82,7 @@ type quotaKey struct {
 	Used      float64
 	Limit     float64
 	Remaining float64
+	ResetTime string
 }
 
 func calculateTotals(models []api.QuotaInfo) (float64, float64, float64) {
@@ -93,6 +94,7 @@ func calculateTotals(models []api.QuotaInfo) (float64, float64, float64) {
 			Used:      model.Used,
 			Limit:     model.Limit,
 			Remaining: model.Remaining,
+			ResetTime: model.ResetTime,
 		}
 
 		if !uniqueQuotas[key] {
@@ -143,7 +145,7 @@ func printFooter(used, limit, remaining float64, tier string, credits int) {
 	summaryColor := getRemainingColor(totalRemainingPercent)
 
 	fmt.Printf("%s📊 Total: %.1f%% used (%.1f%% remaining)%s\n",
-		summaryColor, used, totalRemainingPercent, Reset)
+		summaryColor, totalUsagePercent, totalRemainingPercent, Reset)
 	fmt.Println(strings.Repeat("─", 68))
 
 	// Tier and credits
