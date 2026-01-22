@@ -105,6 +105,14 @@ func calculateTotals(models []api.QuotaInfo) (float64, float64, float64) {
 	return totalUsed, totalLimit, totalRemaining
 }
 
+// formatPercent formats a percentage, showing decimals only when needed.
+func formatPercent(percent float64) string {
+	if percent == float64(int(percent)) {
+		return fmt.Sprintf("%.0f%%", percent)
+	}
+	return fmt.Sprintf("%.1f%%", percent)
+}
+
 func printRows(models []api.QuotaInfo) {
 	for _, model := range models {
 		remainingPercent := 100 - model.UsagePercent
