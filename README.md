@@ -39,7 +39,7 @@ This tool is designed to be transparent and safe:
 
 **Quota Precision**: The Antigravity Local API typically updates usage statistics at specific milestones (e.g., 0%, 20%, 40%, 60%, 80%).
 - This is a limitation of the local API that this tool relies on.
-- Other tools (like *Oh My OpenCode*) may show more granular percentages by hooking directly into the IDE's internal event stream or CLI token counter, which is a different approach than the safe, read-only API method used by this tool.
+- Other tools (like *OpenCode*) may show more granular percentages by hooking directly into the IDE's internal event stream or CLI token counter, which is a different approach than the safe, read-only API method used by this tool.
 
 ---
 <a id="english"></a>
