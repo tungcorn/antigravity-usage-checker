@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.2.2] Documentation Improvements
+
+### Changed
+- **Help Message**: Added `agu` alias information to help text
+  - Users can now see that `agu` is available as a shorter alternative
+  - Updated usage examples to include both `agusage` and `agu`
+
+---
+
 ## [v2.2.1] Fix Alias Deployment
 
 ### Fixed

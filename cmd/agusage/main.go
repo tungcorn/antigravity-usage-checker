@@ -110,6 +110,7 @@ Check Antigravity AI usage quota from the terminal.
 
 USAGE:
     agusage [OPTIONS]
+    agu [OPTIONS]      (alias for quick access)
 
 OPTIONS:
     -h, --help      Show help information
@@ -118,6 +119,7 @@ OPTIONS:
 
 EXAMPLES:
     agusage            Check current quota
+    agu                Same as above (shorter)
     agusage --json     Output JSON for scripting
 `, AppName, Version)
 }
