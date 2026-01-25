@@ -144,7 +144,7 @@ agusage --help   # Help
 
 **Độ chính xác Quota**: API nội bộ của Antigravity thường chỉ cập nhật thống kê sử dụng theo các mốc nhất định (ví dụ: 0%, 20%, 40%, 60%, 80%).
 - Đây là giới hạn của API mà tool này sử dụng.
-- Các công cụ khác (như *Oh My OpenCode*) có thể hiển thị phần trăm chi tiết hơn bằng cách can thiệp trực tiếp vào luồng sự kiện của IDE hoặc đếm token, cách tiếp cận này khác với phương pháp gọi API an toàn (read-only) mà tool này sử dụng.
+- Các công cụ khác (như *OpenCode*) có thể hiển thị phần trăm chi tiết hơn bằng cách can thiệp trực tiếp vào luồng sự kiện của IDE hoặc đếm token, cách tiếp cận này khác với phương pháp gọi API an toàn (read-only) mà tool này sử dụng.
 
 ### Cài đặt nhanh
 
