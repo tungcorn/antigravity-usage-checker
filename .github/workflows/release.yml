@@ -142,18 +142,20 @@ jobs:
       - name: Append Install Instructions
         run: |
           TAG="${{ steps.version.outputs.tag }}"
+          VERSION="${TAG#v}"  # Remove 'v' prefix for version parameter
           if [ -f "release_body.md" ]; then
             echo "" >> release_body.md
             echo "### 🚀 Quick Install" >> release_body.md
             echo "" >> release_body.md
             echo "**Windows (PowerShell):**" >> release_body.md
             echo "\`\`\`powershell" >> release_body.md
-            echo "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/${TAG}/install.ps1 -OutFile \$env:TEMP\install.ps1; . \$env:TEMP\install.ps1" >> release_body.md
+            echo "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/${TAG}/install.ps1 -OutFile \$env:TEMP\install.ps1" >> release_body.md
+            echo ". \$env:TEMP\install.ps1 -Version ${VERSION}" >> release_body.md
             echo "\`\`\`" >> release_body.md
             echo "" >> release_body.md
             echo "**macOS / Linux (Bash):**" >> release_body.md
             echo "\`\`\`bash" >> release_body.md
-            echo "curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/${TAG}/install.sh | bash" >> release_body.md
+            echo "curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/${TAG}/install.sh | bash -s -- -v ${VERSION}" >> release_body.md
             echo "\`\`\`" >> release_body.md
           fi
 

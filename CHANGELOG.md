@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
   - `agu` now always calls the latest `agusage.exe` version
   - Fixes version mismatch issue when updating
   - Automatically removes old `agu.exe` if present
+- **Release Install Instructions**: Now includes `-Version` parameter for accurate version installation
+  - Ensures users install the exact release version they're viewing
+  - Fixes issue where pre-releases would install latest stable instead
 
 ---
 
