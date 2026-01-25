@@ -41,6 +41,8 @@ type QuotaInfo struct {
 type UsageData struct {
 	Models       []QuotaInfo `json:"models"`
 	Tier         string      `json:"tier"`
+	Email        string      `json:"email,omitempty"`
+	Name         string      `json:"name,omitempty"`
 	PromptCredit int         `json:"prompt_credit,omitempty"`
 	FetchedAt    time.Time   `json:"fetched_at"`
 	IsCached     bool        `json:"is_cached,omitempty"`
@@ -53,6 +55,8 @@ type apiResponse struct {
 
 type userStatusRaw struct {
 	PlanName               string                 `json:"planName"`
+	Email                  string                 `json:"email"`
+	Name                   string                 `json:"name"`
 	CascadeModelConfigData cascadeModelConfigData `json:"cascadeModelConfigData"`
 	PromptCreditsInfo      promptCreditsInfo      `json:"promptCreditsInfo"`
 }
@@ -179,6 +183,10 @@ func (c *Client) parseUserStatusResponse(respBytes []byte) (*UsageData, error) {
 	if apiResp.UserStatus.PlanName != "" {
 		usage.Tier = apiResp.UserStatus.PlanName
 	}
+
+	// Extract user info
+	usage.Email = apiResp.UserStatus.Email
+	usage.Name = apiResp.UserStatus.Name
 
 	// Extract prompt credits
 	if apiResp.UserStatus.PromptCreditsInfo.RemainingCredits > 0 {

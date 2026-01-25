@@ -37,38 +37,18 @@ func LoadCredentials() (*Credentials, error) {
 		return nil, fmt.Errorf("failed to get config path: %w", err)
 	}
 	credsFile := filepath.Join(configPath, "oauth_creds.json")
-	
+
 	data, err := os.ReadFile(credsFile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read credentials file: %w", err)
 	}
-	
+
 	var creds Credentials
 	if err := json.Unmarshal(data, &creds); err != nil {
 		return nil, fmt.Errorf("failed to parse credentials: %w", err)
 	}
-	
-	return &creds, nil
-}
 
-// LoadCredentialsWithRetry attempts to load credentials with retry logic.
-// Useful when the file might be locked by Antigravity during token refresh.
-func LoadCredentialsWithRetry(maxRetries int, delay time.Duration) (*Credentials, error) {
-	var lastErr error
-	
-	for i := 0; i < maxRetries; i++ {
-		creds, err := LoadCredentials()
-		if err == nil {
-			return creds, nil
-		}
-		
-		lastErr = err
-		if i < maxRetries-1 {
-			time.Sleep(delay)
-		}
-	}
-	
-	return nil, fmt.Errorf("failed after %d retries: %w", maxRetries, lastErr)
+	return &creds, nil
 }
 
 // getConfigPath returns the path to the .gemini config directory.

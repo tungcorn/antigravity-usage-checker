@@ -58,19 +58,14 @@ func run(outputJSON bool) error {
 
 	fmt.Printf("✅ Found server on port %d (PID: %d)\n", processInfo.ConnectPort, processInfo.PID)
 
+	// Load credentials for token expiry info
 	creds, _ := auth.LoadCredentials()
-	if creds != nil {
-		if creds.IsExpired() {
-			fmt.Println("⚠️  Credentials loaded but expired")
-		} else {
-			fmt.Printf("✅ Credentials loaded (expires in %d min)\n", creds.ExpiresInMinutes())
-		}
-	}
 
 	fmt.Println("📡 Fetching quota data...")
 
 	var quota *api.UsageData
 
+	// Try Google Cloud API first if credentials are valid
 	if creds != nil && !creds.IsExpired() {
 		googleClient := api.NewGoogleCloudClient(creds.AccessToken)
 		quota, err = googleClient.GetUsageData()
@@ -82,6 +77,7 @@ func run(outputJSON bool) error {
 		}
 	}
 
+	// Fallback to local server API
 	if quota == nil {
 		client := api.NewClient(processInfo.ConnectPort, processInfo.CSRFToken, processInfo.HTTPPort)
 		quota, err = client.GetUserStatus()
@@ -94,6 +90,11 @@ func run(outputJSON bool) error {
 			display.ShowUsage(cachedData, outputJSON, true)
 			return nil
 		}
+	}
+
+	// Show account info from API response (most accurate source)
+	if quota.Email != "" {
+		fmt.Printf("👤 Account: %s\n", quota.Email)
 	}
 
 	cache.Save(quota)

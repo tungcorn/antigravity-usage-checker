@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.2.0] Account Display & Deployment Improvements
+
+### Added
+- **Account Display**: Show active account email in Antigravity
+  - Email is fetched from Antigravity Local Server API (most accurate source)
+  - Automatically displays the currently active account
+
+### Changed
+- **Alias Deployment**: Improved `agu` alias creation
+  - Changed from duplicate .exe file to .bat script
+  - `agu` now automatically calls the latest `agusage` version
+  - No manual copying needed when updating
+
+---
+
 ## [v2.1.0] Add Alias Command
 
 ### Added
