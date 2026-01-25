@@ -95,9 +95,21 @@ if (Test-Path $localExe) {
 
 Write-Host "Installed to: $installDir" -ForegroundColor Green
 
-# Create alias 'agu' for convenience
-$aguPath = "$installDir\agu.exe"
-Copy-Item $exePath $aguPath -Force
+# Create alias 'agu' for convenience (using .bat script to always call latest agusage.exe)
+$aguBatPath = "$installDir\agu.bat"
+
+# Remove old agu.exe if exists (from previous install method)
+$oldAguExe = "$installDir\agu.exe"
+if (Test-Path $oldAguExe) {
+    Remove-Item $oldAguExe -Force
+}
+
+# Create agu.bat that calls agusage.exe
+$batContent = @"
+@echo off
+"%~dp0agusage.exe" %*
+"@
+Set-Content -Path $aguBatPath -Value $batContent -Encoding ASCII
 Write-Host "Created alias 'agu' for quick access" -ForegroundColor Green
 
 # Add to PATH

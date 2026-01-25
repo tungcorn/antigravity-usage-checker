@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.2.1] Fix Alias Deployment
+
+### Fixed
+- **Install Script**: Changed `agu` alias from duplicate .exe file to .bat script (Windows)
+  - `agu` now always calls the latest `agusage.exe` version
+  - Fixes version mismatch issue when updating
+  - Automatically removes old `agu.exe` if present
+
+---
+
 ## [v2.2.0] Account Display & Deployment Improvements
 
 ### Added
