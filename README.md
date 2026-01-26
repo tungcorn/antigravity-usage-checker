@@ -241,15 +241,80 @@ agusage --help   # Trợ giúp
 
 ## Development
 
-### Run tests
+### Prerequisites
+
+- [Go](https://go.dev/dl/) 1.25.5 or higher
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/tungcorn/antigravity-usage-checker.git
+cd antigravity-usage-checker
+```
+
+2. Download dependencies:
+```bash
+go mod download
+```
+
+### Run without Build
+
+You can run the tool directly from source:
+```bash
+go run ./cmd/agusage/
+```
+Or with specific arguments:
+```bash
+go run ./cmd/agusage/ --json
+```
+
+### Testing
+
+Run all unit tests:
 ```bash
 go test ./... -v
 ```
 
 ### Build
+
+#### Current Platform
 ```bash
 go build -o agusage ./cmd/agusage/
 ```
+
+#### Cross-platform Build
+Generate binaries for different operating systems:
+
+**Windows (64-bit):**
+```bash
+GOOS=windows GOARCH=amd64 go build -o agusage.exe ./cmd/agusage/
+```
+
+**macOS (Intel):**
+```bash
+GOOS=darwin GOARCH=amd64 go build -o agusage ./cmd/agusage/
+```
+
+**macOS (Apple Silicon):**
+```bash
+GOOS=darwin GOARCH=arm64 go build -o agusage ./cmd/agusage/
+```
+
+**Linux (64-bit):**
+```bash
+GOOS=linux GOARCH=amd64 go build -o agusage ./cmd/agusage/
+```
+
+### Project Structure
+
+- `cmd/agusage/`: Entry point of the application.
+- `internal/`: Private library code.
+  - `auth/`: Authentication and CSRF token handling.
+  - `client/`: Local API client for Antigravity.
+  - `discovery/`: Windsurf process discovery logic.
+  - `display/`: Terminal output formatting and progress bars.
+  - `quota/`: Data structures and quota logic.
 
 ---
 
