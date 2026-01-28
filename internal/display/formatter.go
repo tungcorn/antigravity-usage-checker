@@ -241,9 +241,14 @@ func formatResetTime(resetTimeStr string) string {
 	exactTime := localResetTime.Format("15:04")
 
 	// Format as relative time with exact time
-	hours := int(diff.Hours())
+	totalHours := int(diff.Hours())
+	days := totalHours / 24
+	hours := totalHours % 24
 	minutes := int(diff.Minutes()) % 60
 
+	if days > 0 {
+		return fmt.Sprintf("%dd %dh (%s)", days, hours, exactTime)
+	}
 	if hours > 0 {
 		return fmt.Sprintf("%dh %dm (%s)", hours, minutes, exactTime)
 	}

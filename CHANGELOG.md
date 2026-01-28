@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.2.3] Improved Reset Time Display
+
+### Changed
+- **Reset Time Display**: Show "1d 2h" instead of "26h 33m" when reset time exceeds 24 hours for better readability
+
+---
+
 ## [v2.2.2] Documentation Improvements
 
 ### Changed
