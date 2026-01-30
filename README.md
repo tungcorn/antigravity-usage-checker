@@ -39,7 +39,7 @@ This tool is designed to be transparent and safe:
 
 **Quota Precision**: The Antigravity Local API typically updates usage statistics at specific milestones (e.g., 0%, 20%, 40%, 60%, 80%).
 - This is a limitation of the local API that this tool relies on.
-- Other tools (like *OpenCode*) may show more granular percentages by hooking directly into the IDE's internal event stream or CLI token counter, which is a different approach than the safe, read-only API method used by this tool.
+- Other tools may show more granular percentages by hooking directly into the IDE's internal event stream or CLI token counter, which is a different approach than the safe, read-only API method used by this tool.
 
 ---
 <a id="english"></a>
@@ -154,7 +154,7 @@ Want to contribute? Read the [Development Guide](CONTRIBUTING.md).
 
 **Độ chính xác Quota**: API nội bộ của Antigravity thường chỉ cập nhật thống kê sử dụng theo các mốc nhất định (ví dụ: 0%, 20%, 40%, 60%, 80%).
 - Đây là giới hạn của API mà tool này sử dụng.
-- Các công cụ khác (như *OpenCode*) có thể hiển thị phần trăm chi tiết hơn bằng cách can thiệp trực tiếp vào luồng sự kiện của IDE hoặc đếm token, cách tiếp cận này khác với phương pháp gọi API an toàn (read-only) mà tool này sử dụng.
+- Các công cụ khác có thể hiển thị phần trăm chi tiết hơn bằng cách can thiệp trực tiếp vào luồng sự kiện của IDE hoặc đếm token, cách tiếp cận này khác với phương pháp gọi API an toàn (read-only) mà tool này sử dụng.
 
 ### Cài đặt nhanh
 
