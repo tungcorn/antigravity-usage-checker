@@ -52,6 +52,11 @@ This tool is designed to be transparent and safe:
 iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; . $env:TEMP\install.ps1
 ```
 
+> 💡 If you get "running scripts is disabled" error, run:
+> ```powershell
+> powershell -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; & $env:TEMP\install.ps1"
+> ```
+
 **macOS / Linux (Bash):**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.sh | bash
@@ -70,7 +75,7 @@ Run the install command again to update to the latest version.
 
 **Windows:**
 ```powershell
-iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; . $env:TEMP\install.ps1 -Version 0.5.0
+powershell -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; & $env:TEMP\install.ps1 -Version 0.5.0"
 ```
 
 **macOS / Linux:**
@@ -157,6 +162,11 @@ Want to contribute? Read the [Development Guide](CONTRIBUTING.md).
 ```powershell
 iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; . $env:TEMP\install.ps1
 ```
+
+> 💡 Nếu gặp lỗi "running scripts is disabled", chạy:
+> ```powershell
+> powershell -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; & $env:TEMP\install.ps1"
+> ```
 
 **macOS / Linux (Bash):**
 ```bash
