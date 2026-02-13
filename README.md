@@ -26,6 +26,24 @@ This tool is designed to be transparent and safe:
 
 > 💡 You can review the [install scripts](install.ps1) before running them.
 
+## 🚨 Security Warning / Cảnh báo bảo mật
+
+> ⚠️ **A malicious fork of this repository exists!** The fork `Motasem-amer/antigravity-usage-checker` distributes **malware** disguised as this tool. It replaced the README with fake "Download Now" links pointing to a ZIP file containing a Windows malware dropper.
+>
+> **Only download from:**
+> - ✅ This repository: [tungcorn/antigravity-usage-checker](https://github.com/tungcorn/antigravity-usage-checker)
+> - ✅ Official Releases: [GitHub Releases](https://github.com/tungcorn/antigravity-usage-checker/releases)
+>
+> **Do NOT download** from any fork or unofficial source. If you have downloaded from the fork above, please scan your system immediately.
+
+> ⚠️ **Một fork độc hại của repository này đang tồn tại!** Fork `Motasem-amer/antigravity-usage-checker` phân phối **malware** giả dạng tool này. Nó đã thay thế README bằng các link "Download Now" giả trỏ tới file ZIP chứa malware Windows.
+>
+> **Chỉ tải từ:**
+> - ✅ Repository chính: [tungcorn/antigravity-usage-checker](https://github.com/tungcorn/antigravity-usage-checker)
+> - ✅ Bản phát hành chính thức: [GitHub Releases](https://github.com/tungcorn/antigravity-usage-checker/releases)
+>
+> **KHÔNG tải** từ bất kỳ fork hoặc nguồn không chính thức nào. Nếu bạn đã tải từ fork trên, hãy quét virus hệ thống ngay lập tức.
+
 ## 🔧 How It Works
 
 1. Detects the running Windsurf language server process
