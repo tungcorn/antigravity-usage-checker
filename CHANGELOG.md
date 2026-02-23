@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.2.4] Document Local Install Override & UI Time Display
+
+### Added
+- **Documentation**: Added instructions to `CONTRIBUTING.md` on how to build and override the local installation for testing on Windows.
+- **UI Display**: The check timestamp header now includes the full date in `HH:MM:SS DD/MM/YYYY` format alongside the time instead of just the relative time or time alone.
+
+---
+
 ## [v2.2.3] Improved Reset Time Display
 
 ### Changed

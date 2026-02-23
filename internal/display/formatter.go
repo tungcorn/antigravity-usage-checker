@@ -63,15 +63,18 @@ func printHeader(data *api.UsageData, isCached bool) {
 	fmt.Println()
 	fmt.Println("┌" + strings.Repeat("─", 73) + "┐")
 	fmt.Printf("│ %s%s🚀 Antigravity Usage Monitor%s%-44s│\n", Bold, Cyan, Reset, "")
+	fmt.Println("├" + strings.Repeat("─", 73) + "┤")
 
-	// Cache indicator
+	// Always show check time
+	fmt.Printf("│ %s⏰ Checked at: %s%s%-38s│\n", Dim, formatTime(data.FetchedAt), Reset, "")
+
+	// Cache indicator (only when cached)
 	if isCached || data.IsCached {
 		fmt.Println("├" + strings.Repeat("─", 73) + "┤")
 		fmt.Printf("│ %s⚠️  Cached data from %s%s%-32s│\n", Yellow, formatTime(data.FetchedAt), Reset, "")
 	}
 
 	fmt.Println("├" + strings.Repeat("─", 73) + "┤")
-
 	// Table header
 	fmt.Printf("│ %-30s %-7s %-14s %-18s│\n",
 		"Model", "Used", "Progress", "Reset")
