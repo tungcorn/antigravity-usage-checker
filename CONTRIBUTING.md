@@ -50,9 +50,16 @@ go build -o agusage ./cmd/agusage/
 ```
 
 #### Update Local Installation (Windows)
-If you installed the tool via `install.ps1` and want to test your local changes using the `agu` or `agusage` command globally:
+If you installed the tool via `install.ps1` and want to test your local changes globally:
+
+**Option 1: Automatic version (Matches latest Git tag)**
 ```powershell
-go build -o $env:LOCALAPPDATA\agusage\agusage.exe ./cmd/agusage/
+$v = (git describe --tags --abbrev=0).TrimStart('v'); go build -ldflags "-X main.Version=$v" -o $env:LOCALAPPDATA\agusage\agusage.exe ./cmd/agusage/
+```
+
+**Option 2: Custom version (Manual)**
+```powershell
+go build -ldflags "-X main.Version=X.X.X" -o $env:LOCALAPPDATA\agusage\agusage.exe ./cmd/agusage/
 ```
 
 #### Cross-platform Build
@@ -137,9 +144,16 @@ go build -o agusage ./cmd/agusage/
 ```
 
 #### Cập nhật bản cài đặt local (Windows)
-Nếu bạn đã cài đặt qua file `install.ps1` và muốn kiểm thử code đang chỉnh sửa trực tiếp thông qua lệnh `agu` hoặc `agusage` trên toàn hệ thống:
+Nếu bạn đã cài đặt qua file `install.ps1` và muốn kiểm thử code đang chỉnh sửa trực tiếp trên toàn hệ thống:
+
+**Cách 1: Tự động lấy số phiên bản (Theo tag Git mới nhất)**
 ```powershell
-go build -o $env:LOCALAPPDATA\agusage\agusage.exe ./cmd/agusage/
+$v = (git describe --tags --abbrev=0).TrimStart('v'); go build -ldflags "-X main.Version=$v" -o $env:LOCALAPPDATA\agusage\agusage.exe ./cmd/agusage/
+```
+
+**Cách 2: Nhập số phiên bản tùy chỉnh (Thủ công)**
+```powershell
+go build -ldflags "-X main.Version=X.X.X" -o $env:LOCALAPPDATA\agusage\agusage.exe ./cmd/agusage/
 ```
 
 #### Đóng gói đa nền tảng (Cross-platform Build)
