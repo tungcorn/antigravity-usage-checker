@@ -1,11 +1,9 @@
 ﻿# Antigravity Usage Checker
 
-🌐 [🇻🇳 Tiếng Việt](#vietnamese) | [🇬🇧 English](#english)
-
-🚀 Check your Antigravity AI usage quota from terminal
+[Tiếng Việt](README.vi.md)
 
 ![Version](https://img.shields.io/github/v/release/tungcorn/antigravity-usage-checker)
-![Go](https://img.shields.io/badge/Go-1.21+-00ADD8?logo=go)
+![Go](https://img.shields.io/badge/Go-1.25.5+-00ADD8?logo=go)
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=flat&logo=windows&logoColor=white)
 ![macOS](https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black)
@@ -14,275 +12,172 @@
 
 ![Screenshot](assets/image.png)
 
-## 🔒 Security
+Check your Antigravity AI usage quota from the terminal.
+
+Antigravity Usage Checker is a small Go command-line tool that reads quota information from the local Antigravity/Windsurf API and prints it in a terminal-friendly format.
+
+## Important security warning
+
+A malicious fork of this repository exists: `Motasem-amer/antigravity-usage-checker`.
+
+That fork has distributed malware disguised as this tool by replacing the README with fake "Download Now" links that point to a ZIP file containing a Windows malware dropper.
+
+Only download this tool from:
+
+- **This repository**: [tungcorn/antigravity-usage-checker](https://github.com/tungcorn/antigravity-usage-checker)
+- **Official releases**: [GitHub Releases](https://github.com/tungcorn/antigravity-usage-checker/releases)
+
+Do not download this tool from forks or unofficial sources. If you already downloaded a copy from the fork above, scan your system immediately.
+
+## Security model
 
 This tool is designed to be transparent and safe:
 
-- ✅ **Local only** - Only connects to `localhost` (Antigravity local server)
-- ✅ **No network calls** - Does NOT send any data to external servers
-- ✅ **No telemetry** - No tracking, analytics, or data collection
-- ✅ **Open source** - All code is public and auditable
-- ✅ **CodeQL scanned** - Automatically scanned for security vulnerabilities
+- **Local API only**: It connects to the local Antigravity server on `127.0.0.1`.
+- **No external runtime network calls**: The application does not send usage data to external servers.
+- **No telemetry**: There is no tracking, analytics, or data collection.
+- **Open source**: The code and install scripts are available for review.
+- **Read-only behavior**: It reads local process information and quota data; it does not modify your Antigravity setup.
 
-> 💡 You can review the [install scripts](install.ps1) before running them.
+The install scripts download release assets from GitHub. Review `install.ps1` or `install.sh` before running them if you prefer.
 
-## 🚨 Security Warning / Cảnh báo bảo mật
+## Requirements
 
-> ⚠️ **A malicious fork of this repository exists!** The fork `Motasem-amer/antigravity-usage-checker` distributes **malware** disguised as this tool. It replaced the README with fake "Download Now" links pointing to a ZIP file containing a Windows malware dropper.
->
-> **Only download from:**
-> - ✅ This repository: [tungcorn/antigravity-usage-checker](https://github.com/tungcorn/antigravity-usage-checker)
-> - ✅ Official Releases: [GitHub Releases](https://github.com/tungcorn/antigravity-usage-checker/releases)
->
-> **Do NOT download** from any fork or unofficial source. If you have downloaded from the fork above, please scan your system immediately.
+- Antigravity must be running to fetch fresh quota data.
+- Internet access is required only when using the installer or downloading releases.
 
-> ⚠️ **Một fork độc hại của repository này đang tồn tại!** Fork `Motasem-amer/antigravity-usage-checker` phân phối **malware** giả dạng tool này. Nó đã thay thế README bằng các link "Download Now" giả trỏ tới file ZIP chứa malware Windows.
->
-> **Chỉ tải từ:**
-> - ✅ Repository chính: [tungcorn/antigravity-usage-checker](https://github.com/tungcorn/antigravity-usage-checker)
-> - ✅ Bản phát hành chính thức: [GitHub Releases](https://github.com/tungcorn/antigravity-usage-checker/releases)
->
-> **KHÔNG tải** từ bất kỳ fork hoặc nguồn không chính thức nào. Nếu bạn đã tải từ fork trên, hãy quét virus hệ thống ngay lập tức.
+## Quick install
 
-## 🔧 How It Works
+### Windows
 
-1. Detects the running Windsurf language server process
-2. Extracts connection parameters (port, CSRF token) from process arguments
-3. Calls the local API at `127.0.0.1` to fetch quota data
-4. Parses and displays the information in terminal
+Run in PowerShell:
 
-> **Note**: This tool only reads publicly available process information and communicates with localhost. No external network requests are made.
-
-## ⚠️ Known Limitations
-
-**Quota Precision**: The Antigravity Local API typically updates usage statistics at specific milestones (e.g., 0%, 20%, 40%, 60%, 80%).
-- This is a limitation of the local API that this tool relies on.
-- Other tools may show more granular percentages by hooking directly into the IDE's internal event stream or CLI token counter, which is a different approach than the safe, read-only API method used by this tool.
-
----
-<a id="english"></a>
-## 🇬🇧 English
-
-### Quick Install
-
-**Windows (PowerShell):**
 ```powershell
 iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; . $env:TEMP\install.ps1
 ```
 
-> 💡 If you get "running scripts is disabled" error, run:
-> ```powershell
-> powershell -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; & $env:TEMP\install.ps1"
-> ```
+If PowerShell blocks script execution, run:
 
-**macOS / Linux (Bash):**
+```powershell
+powershell -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; & $env:TEMP\install.ps1"
+```
+
+### macOS and Linux
+
+Run in a shell:
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.sh | bash
 ```
 
 Then run:
+
 ```bash
 agusage
 ```
 
-### Update
+## Update
 
 Run the install command again to update to the latest version.
 
-### Install Specific Version
+## Install a specific version
 
-**Windows:**
+### Windows
+
 ```powershell
 powershell -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; & $env:TEMP\install.ps1 -Version 0.5.0"
 ```
 
-**macOS / Linux:**
+### macOS and Linux
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.sh | bash -s -- -v 0.5.0
 ```
 
-### Manual Install
+## Manual install
 
-1. **Download** from [Releases](https://github.com/tungcorn/antigravity-usage-checker/releases/latest)
+1. Download the latest release from [GitHub Releases](https://github.com/tungcorn/antigravity-usage-checker/releases/latest).
+
+2. Choose the archive for your platform:
+
    - Windows: `antigravity-usage-checker-windows-amd64.zip`
    - macOS Intel: `antigravity-usage-checker-darwin-amd64.tar.gz`
    - macOS Apple Silicon: `antigravity-usage-checker-darwin-arm64.tar.gz`
    - Linux: `antigravity-usage-checker-linux-amd64.tar.gz`
 
-2. **Extract** the archive to a folder of your choice
+3. Extract the archive.
 
-3. **Run** the executable:
-   - Windows: Double-click `agusage.exe` or run from terminal
-   - macOS/Linux: Run `chmod +x agusage` first, then `./agusage`
+4. Run the executable:
 
-4. **(Optional) Add to PATH** for global access:
-   - **Windows**: 
-     1. Move `agusage.exe` to a folder (e.g., `C:\Tools\`)
-     2. Press `Win + R`, type `sysdm.cpl`, press Enter
-     3. Go to **Advanced** → **Environment Variables**
-     4. Under **User variables**, select `Path` → **Edit** → **New**
-     5. Add your folder path (e.g., `C:\Tools`) → **OK**
-     6. Restart your terminal
-   - **macOS/Linux**: Move to `/usr/local/bin/` (recommended):
-     ```bash
-     sudo mv agusage /usr/local/bin/
-     ```
-     Or add custom folder to PATH in `~/.bashrc` or `~/.zshrc`:
-     ```bash
-     export PATH="$PATH:/path/to/your/folder"
-     ```
+   - Windows: run `agusage.exe`
+   - macOS/Linux: run `chmod +x agusage`, then `./agusage`
 
-> ⚠️ Antigravity must be running
+5. Optional: add the executable to `PATH`.
 
-### Features ✨
+   Windows:
 
-- 🎨 **Color-coded display** - Green when quota is healthy (>50%), yellow when moderate (>20%), red when low
-- 📊 **Smart total calculation** - Automatically detects and deduplicates shared quota pools
-- 🔄 **Unicode progress bars** - Beautiful █ and ░ characters for visual progress
-- ⚡ **Fast and lightweight** - Written in Go, single binary, no dependencies
-- 💾 **Offline cache** - Works even when Antigravity is not running
+   1. Move `agusage.exe` to a folder such as `C:\Tools`.
+   2. Press `Win + R`, type `sysdm.cpl`, and press Enter.
+   3. Open **Advanced** > **Environment Variables**.
+   4. Under **User variables**, select `Path` > **Edit** > **New**.
+   5. Add the folder path and restart your terminal.
 
-### Commands
+   macOS/Linux:
+
+   ```bash
+   sudo mv agusage /usr/local/bin/
+   ```
+
+   Or add a custom folder to `PATH` in `~/.bashrc` or `~/.zshrc`:
+
+   ```bash
+   export PATH="$PATH:/path/to/your/folder"
+   ```
+
+## Usage
 
 ```bash
-agusage          # Show quota (or use 'agu' for short)
-agu              # Shorthand alias for agusage
-agusage --json   # JSON output
-agusage --help   # Help
+agusage            # Show current quota
+agu                # Short alias installed by the install scripts
+agusage --json     # Output JSON
+agusage -j         # Output JSON using shorthand
+agusage --version  # Show version information
+agusage --help     # Show help
 ```
 
-### Platform Support
+## Features
+
+- **Color-coded output**: Green, yellow, and red indicators based on remaining quota.
+- **Smart total calculation**: Detects and deduplicates shared quota pools.
+- **Unicode progress bars**: Displays quota usage with terminal progress bars.
+- **Fast and lightweight**: Written in Go and distributed as a single binary.
+- **Offline cache**: Can show cached quota data when Antigravity is not running.
+
+## How it works
+
+1. Finds the running Windsurf language server process.
+2. Reads the local connection parameters from process arguments.
+3. Calls the Antigravity local API on `127.0.0.1`.
+4. Parses quota data and displays it in the terminal.
+
+## Known limitations
+
+The Antigravity local API usually updates usage statistics at milestone values such as 0%, 20%, 40%, 60%, and 80%.
+
+This tool intentionally uses the safe, read-only local API. Other tools may show more granular percentages by hooking into internal IDE event streams or token counters, which is a different approach.
+
+## Platform support
 
 | Platform | Status |
-|----------|--------|
-| Windows | ✅ Fully tested |
-| macOS | ✅ CI tested |
-| Linux | ✅ CI tested |
-| Linux | ✅ CI tested |
+| --- | --- |
+| Windows | Fully tested |
+| macOS | CI tested |
+| Linux | CI tested |
 
-### Contributing
+## Contributing
 
-Want to contribute? Read the [Development Guide](CONTRIBUTING.md).
-
----
-<a id="vietnamese"></a>
-## 🇻🇳 Tiếng Việt
-
-## ⚠️ Hạn chế đã biết
-
-**Độ chính xác Quota**: API nội bộ của Antigravity thường chỉ cập nhật thống kê sử dụng theo các mốc nhất định (ví dụ: 0%, 20%, 40%, 60%, 80%).
-- Đây là giới hạn của API mà tool này sử dụng.
-- Các công cụ khác có thể hiển thị phần trăm chi tiết hơn bằng cách can thiệp trực tiếp vào luồng sự kiện của IDE hoặc đếm token, cách tiếp cận này khác với phương pháp gọi API an toàn (read-only) mà tool này sử dụng.
-
-### Cài đặt nhanh
-
-**Windows (PowerShell):**
-```powershell
-iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; . $env:TEMP\install.ps1
-```
-
-> 💡 Nếu gặp lỗi "running scripts is disabled", chạy:
-> ```powershell
-> powershell -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; & $env:TEMP\install.ps1"
-> ```
-
-**macOS / Linux (Bash):**
-```bash
-curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.sh | bash
-```
-
-Sau đó chạy:
-```bash
-agusage
-```
-
-### Cập nhật
-
-Chạy lại lệnh cài đặt để cập nhật lên phiên bản mới nhất.
-
-### Cài đặt phiên bản cụ thể
-
-**Windows:**
-```powershell
-iwr https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.ps1 -OutFile $env:TEMP\install.ps1; . $env:TEMP\install.ps1 -Version 0.5.0
-```
-
-**macOS / Linux:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/main/install.sh | bash -s -- -v 0.5.0
-```
-
-### Cài thủ công
-
-1. **Tải** từ [Releases](https://github.com/tungcorn/antigravity-usage-checker/releases/latest)
-   - Windows: `antigravity-usage-checker-windows-amd64.zip`
-   - macOS Intel: `antigravity-usage-checker-darwin-amd64.tar.gz`
-   - macOS Apple Silicon: `antigravity-usage-checker-darwin-arm64.tar.gz`
-   - Linux: `antigravity-usage-checker-linux-amd64.tar.gz`
-
-2. **Giải nén** file vào thư mục bạn chọn
-
-3. **Chạy** chương trình:
-   - Windows: Double-click `agusage.exe` hoặc chạy từ terminal
-   - macOS/Linux: Chạy `chmod +x agusage` trước, sau đó `./agusage`
-
-4. **(Tùy chọn) Thêm vào PATH** để chạy từ mọi nơi:
-   - **Windows**: 
-     1. Di chuyển `agusage.exe` vào thư mục (ví dụ: `C:\Tools\`)
-     2. Nhấn `Win + R`, gõ `sysdm.cpl`, nhấn Enter
-     3. Chọn tab **Advanced** → **Environment Variables**
-     4. Trong **User variables**, chọn `Path` → **Edit** → **New**
-     5. Thêm đường dẫn thư mục (ví dụ: `C:\Tools`) → **OK**
-     6. Khởi động lại terminal
-   - **macOS/Linux**: Di chuyển vào `/usr/local/bin/` (khuyến nghị):
-     ```bash
-     sudo mv agusage /usr/local/bin/
-     ```
-     Hoặc thêm thư mục tùy chọn vào PATH trong `~/.bashrc` hoặc `~/.zshrc`:
-     ```bash
-     export PATH="$PATH:/path/to/your/folder"
-     ```
-
-> ⚠️ Antigravity phải đang chạy
-
-### Tính năng ✨
-
-- 🎨 **Màu sắc thông minh** - Xanh lá khi quota còn nhiều (>50%), vàng khi trung bình (>20%), đỏ khi sắp hết
-- 📊 **Tính tổng thông minh** - Tự động phát hiện và loại bỏ trùng lặp các quota pools dùng chung
-- 🔄 **Progress bar Unicode** - Ký tự █ và ░ đẹp mắt cho thanh tiến độ
-- ⚡ **Nhanh và nhẹ** - Viết bằng Go, binary đơn giản, không cần dependencies
-- 💾 **Cache offline** - Hoạt động ngay cả khi Antigravity không chạy
-
-### Các lệnh
-
-```bash
-agusage          # Xem quota (hoặc dùng 'agu' cho ngắn gọn)
-agu              # Tên rút gọn của agusage
-agusage --json   # Xuất JSON
-agusage --help   # Trợ giúp
-```
-
-### Hỗ trợ nền tảng
-
-| Nền tảng | Trạng thái |
-|----------|------------|
-| Windows | ✅ Đã test đầy đủ |
-| macOS | ✅ Đã test CI |
-| Linux | ✅ Đã test CI |
-
-### Đóng góp
-
-Bạn muốn đóng góp? Xem [Hướng dẫn phát triển](CONTRIBUTING.md).
-
----
-
+For development setup, testing, and build instructions, read the [contributing guide](CONTRIBUTING.md).
 
 ## License
 
 [MIT](LICENSE) © 2024-present
-
----
-
-<p align="center">
-  <b>If you find this useful, give it a ⭐!</b>
-</p>
