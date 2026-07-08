@@ -73,7 +73,7 @@ curl -fsSL https://raw.githubusercontent.com/tungcorn/antigravity-usage-checker/
 Then run:
 
 ```bash
-agusage
+agu
 ```
 
 ## Update
